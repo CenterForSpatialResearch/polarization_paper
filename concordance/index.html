@@ -147,7 +147,7 @@ function drawBarChart(field, data){
         d3.selectAll("rect").attr("fill","black")
         d3.select(this).attr('fill',"orange")
         $('html,body').animate({
-                scrollTop: $(".year_"+d.year).offset().top-220 },
+                scrollTop: $(".year_"+d.year).offset().top-225 },
                 'slow');
     })
 }
@@ -217,7 +217,7 @@ function formatData(data,splitBy){
             var abs = data[i].Abs
             var absList = abs.split(". ")
             for(var j in absList){
-                if(absList[j].split(splitBy).length>1){
+                if(absList[j].split(splitBy).length>1&& year!=""){
                     split.push([absList[j],{author:author,title:title,year:year}])
                 }
             }
@@ -269,6 +269,29 @@ function drawText(data,splitBy,field){
                     topMargin += fontSizeScaleBottom(Math.abs(i-maxAtLine))
                 }
                 
+                if(i>0){
+                    if(data[i][1].year!=data[i-1][1].year){
+                        d3.select("#chart1").append("div").attr("id","year_divider").html(data[i][1].year)
+                        .style("border-top","1px dotted orange")
+                        .style("color","orange")
+                        .style("font-size","20px")
+                        .style("width","100%")
+                        .style("height","12px")
+                        .style("text-align","right")
+                        .attr("class","year year_"+data[i][1].year)
+                    }
+                }else if(i==0){
+                        d3.select("#chart1").append("div").attr("id","year_divider").html(data[0][1].year)
+                        .style("border-top","1px dotted orange")
+                        .style("color","orange")
+                        .style("font-size","20px")
+                        .style("width","100%")
+                        .style("height","12px")
+                        .style("text-align","right")
+                        .attr("class","year year_"+data[i][1].year)
+                }
+                
+                
                 var row = d3.select("#chart1").append("div").attr("id","index_"+i).attr("class","row")
                 .attr("author",data[i][1].author)
                 .attr("title",data[i][1].title)
@@ -296,17 +319,7 @@ function drawText(data,splitBy,field){
                     d3.selectAll(".row").style("color","black")
                 })
                 
-                if(i>0){
-                    if(data[i][1].year!=data[i-1][1].year){
-                        d3.select("#chart1").append("div").attr("id","year_divider").html(data[i][1].year)
-                        .style("border-top","1px dotted orange")
-                        .style("color","orange")
-                        .style("width","100%")
-                        .style("height","12px")
-                        .style("text-align","right")
-                        .attr("class","year year_"+data[i][1].year)
-                    }
-                }
+                
                 
                 
                 
