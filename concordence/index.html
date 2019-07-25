@@ -14,43 +14,13 @@
   
     
     <style>
-        .t{
-            display:inline-block;
-            border:1px solid black;
-            overflow:auto;
-        }
-     
-        #b{
-            width:50%;
-            text-align:right;
-        }
-        #c{
-          margin-left:50%;  
-        }
-        #a{
-            width:50%;
-          margin-left:50%;  
-        }
-        
+       
         
     </style>
 </head>
 <body>
    <div id="info"></div>
    <div id="control">control</div>
-  <div id="test">
-      <div class="row">
-          <div id="b" class="t">  among friends have demonstrated their importance to product marketing</div>
-          <div id="c" class="t">homophily</div>
-          <div id="a" class="t">homophily among friends have demonstrated their importance to product marketing</div>
-      </div>
-
-       <div class="row" id="sec">
-           <div id="b" class="t">  among friends have demonortance to product marketing</div>
-           <div id="c" class="t">homophily</div>
-           <div id="a" class="t">homophily among friends have demonstrated their importance to product marketing</div>
-       </div>
-     </div>
   
     <div id="chart1">
     </div>
@@ -166,69 +136,33 @@ function drawText(data){
                     topMargin += fontSizeScaleBottom(Math.abs(i-maxAtLine))
                 }
                 
-                d3.select("#chart1").append("div").attr("id","index_"+i).attr("class","row row_"+i)
-                
-                d3.select("#index_"+i).append("div").html(absList[0]).attr("class","before before_"+i)                
-              //  .style("top",topMargin+"px")
-
-                d3.select("#index_"+i).append("div").html(splitBy).attr("class","center center_"+i)
-             //   .style("top",topMargin+"px")
+                var row = d3.select("#chart1").append("div").attr("id","index_"+i).attr("class","row")
                 
                 
-                var ending = absList[1]
+                if(absList[0]==""){
+                    var ending = "<strong>&nbsp;Homophily</strong>"+absList[1]
+                }else{
+                    var ending = "<strong>&nbsp;homophily</strong>"+absList[1]
+                }
+                
                 
                 if(absList[1][absList[1].length-1]!="."){
-                    ending =absList[1]+"."
+                    ending =ending+"."
                 }
-                if(ending[0]!="\'" && ending[0]!=","&& ending[0]!="."&& ending[0]!="-"&& ending[0]!=")"&& ending[0]!="\""){
-                    ending = "&nbsp"+ending
-                }
-            
-                d3.select("#index_"+i).append("div")
+                //if(ending[0]!="\'" && ending[0]!=","&& ending[0]!="."&& ending[0]!="-"&& ending[0]!=")"&& ending[0]!="\""){
+                //    ending = "&nbsp"+ending
+                //}
+                
+                
+                row.append("div")
+                .html(absList[0])
+                .attr("class","before before_"+i)//  
+            //    row.append("div").html("b").attr("class","center center_"+i)//.html(splitBy)
+                
+                row.append("div")//.html("c")
                 .html(ending)
                 .attr("class","after after_"+i)
-              //  .style("top",topMargin+"px")
-                
-                //d3.selectAll(".row_"+i)
-                //.style("font-size",function(){
-                //    if(i<=maxAtLine){
-                //        return fontSizeScaleTop(Math.abs(i-maxAtLine))+"px"
-                //    }else{
-                //        return fontSizeScaleBottom(Math.abs(i-maxAtLine))+"px"
-                //    }
-                //})
-                //var centerWidth = parseFloat(d3.select(".center_"+i).style("width").replace("px",""))*1.1
-                //
-                //d3.select(".before_"+i)
-                //.style("right",function(){
-                //    var previousML = parseFloat(d3.select(".before_"+i).style("right").replace("px",""))
-                //    return window.innerWidth/2+centerWidth/2-8+"px"
-                //})
-                //
-                //d3.select(".center_"+i)
-                //.style("margin-left",function(){
-                //    var previousML = parseFloat(d3.select(".center_"+i).style("margin-left").replace("px",""))                    
-                //        return window.innerWidth/2-centerWidth/2-8+"px"
-                //    
-                //}).style("text-align","center")
-                //
-                //d3.select(".after_"+i)
-                //.style("left",centerWidth/2+"px")
-                //
-                //var opacityScaleTop = d3.scaleLinear().domain([0,maxAtLine]).range([0.5,1])
-                //var opacityScaleBottom = d3.scaleLinear().domain([maxAtLine,data.length-maxAtLine]).range([1,0.5])
-                //
-                //d3.select(".row_"+i)
-                //.style("opacity",function(){
-                //    if(i<maxAtLine){
-                //        return opacityScaleTop(i)
-                //    }else{
-                //        return opacityScaleBottom(i)
-                //    }
-                //})
-                
-                
-                //break
+             
             }
     }
 }
