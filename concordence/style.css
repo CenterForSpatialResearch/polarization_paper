@@ -1,0 +1,42 @@
+@font-face {
+    font-family: "stan";
+    src: url(StanhopeRR-Medium.otf) format("opentype");
+}
+
+body{
+    font-size:10px;
+    font-family:"stan";
+    line-height:150%;
+    background-color:black;
+    color:white;
+    
+}
+
+.before{
+    color:#ccc;
+    text-align:right;
+    vertical-align: top; /* here */
+    display:inline-block;
+    position:absolute;
+    top:0px;
+    right:50%;
+    margin-right:3px;
+    width:10000px;
+}
+.center{
+    vertical-align: top; /* here */
+    display:inline-block;
+    position:absolute;
+    top:0px;
+    left:0px;
+    margin-left:50%;
+}
+.after{
+    color:#ccc;
+    vertical-align: top; /* here */
+    display:inline-block;
+    position:absolute;
+    top:0px;
+    margin-left:50%;
+    width:10000px;
+}
