@@ -1,12 +1,11 @@
 @font-face {
-    /*
     font-family: "stan";
-        src: url(StanhopeRR-Medium.otf) format("opentype");*/
+        src: url(../lib/StanhopeRR-Medium.otf) format("opentype");
 }
 
 body{
-    font-size:10px;
-    font-family:helvetica;
+    font-size:12px;
+    font-family:stan;
     line-height:150%;
 /*
     background-color:black;
@@ -38,29 +37,28 @@ body{
 }
 #chart1{
     position:absolute;
-    top:250px;
+    float:top;
     width:99%;
     overflow:hidden;
-    
+    margin-top:20px;
 }
 #control{
-    border-bottom:1px solid #aaa;
+    border:1px solid #aaa;
     padding:10px;
-    background-color:#fff;
+    background-color:rgba(255,255,255,.8);
     position:fixed;
     top:0px;
     left:0px;
     z-index:999;
-    width:100%;
+    width:440px;
     display:inline-block;
-    height:200px;
 }
 #count{
     font-size:14px;
     border:1px solid #aaa;
     padding:10px;
     margin:5px;
-    width:600px;
+    width:400px;
     display:inline-block;
 }
 #title{
@@ -73,6 +71,16 @@ body{
     width:250px;
     display:inline-block;
 }
+.keyword{
+    font-size:10px;
+    padding:5px;
+    border:1px solid #aaa;
+    width:100px;
+    margin:2px;
+    border-radius:3px;
+    display:inline-block;
+    text-align:center;
+}
 #barchart{
     display:inline-block;
 }
@@ -81,6 +89,7 @@ body{
     margin:5px;
 }
 .field{
+    font-size:10px;
     padding:5px;
     border:1px solid #aaa;
     width:100px;

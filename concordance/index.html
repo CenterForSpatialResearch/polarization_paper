@@ -9,6 +9,7 @@
     <script type="text/javascript" src="../lib/d3.v5.min.js"></script>
     <script type="text/javascript" src="../lib/d3-tip.js"></script>
     <script type="text/javascript" src="../lib/jquery.js"></script>
+    <script type="text/javascript" src="../lib/colors.js"></script>
 <!--
     <script type="text/javascript" src="downloadSVG.js"></script>
 -->
@@ -28,16 +29,13 @@
           <!--
           <p>Since 1949, the definition of homophily has evolved from a descriptive term coined to describe a situationally specific and unique observation, to a general concept with its own prescriptive set of methodologies that embeds it within many of the algorithms we use daily. The turn from homophily as observation to homophily as methodology can be seen in the progression of scientific and popular examples from the research and literature that utilize the term.</p>-->
                     
-                   <p> This visualization consists of a selection of 1777 papers taken from the Web of Science that makes use of the term homophily in various ways.</p>
+                   <p> This visualization consists of a selection of 1777 paper abstracts taken from the Web of Science where homophily is a topic.</p>
           
       </div>      
-       <div id="fields" class="select">
-       </div>
-<!--
-       <div id="keywords" class="select">keywords:</div>
--->
+       <div id="fields" class="select">Fields:<br/></div>
+       <div id="keywords" class="select">Keywords:<br/></div>
        <div id="count">  
-             <div id="countText"> </div> 
+             <div id="countText"></div> 
                     
            <div id="barchart"></div>
        </div>
@@ -57,17 +55,22 @@
     d3.select("#a").style("width","900px")
     
     var fields = ["computer_science","behavioral_sciences","psychology","sociology","social_sciences_other","business_economics"]
-    var keyWords = ["homophily","social netowrk","predict","model","classify"]
+    var keywords = ["homophily","social network","predict","model"]
     
     var keyWord = "homophily"
     var field = "computer_science"//"behavioral_sciences" "psychology"
+    var currentField = "computer_science"//"behavioral_sciences" "psychology"
     var maxFontSize = 14
     var minFontSize = 14
     var maxAtLine = 0
     var lengthLimit = 1000
 
 
-    var highlightColor="blue"
+    var buttonHighlightColor= cyan
+    var buttonHighlightColor2= magenta
+    var concordanceHighlightColor = magenta
+    var barHighlightColor = orange
+    var wordHighlightColor = orange
     
     document.title = field.split("_").join(" ")
     
@@ -88,14 +91,17 @@
      //   var formateByMaxAtLine = orderByMaxAtLine(formatted)
         drawText(formatted,keyWord,field)
         makeFieldButtons(data,keyWord,chartData)
-        d3.select(".computer_science").style("color",highlightColor)
+        makeKeywordButtons(data,keyWord,chartData)
+        d3.select(".computer_science").style("color",buttonHighlightColor).style("border","1px solid "+buttonHighlightColor)
         
         //drawSvgText(formatted)
     })
+    
+
 function drawBarChart(field, data){
     d3.selectAll("#barchart svg").remove()
     field = field.split("_").join(" ")
-    var w = 600
+    var w = 400
     var h = 100
     var bw = 8
     var p = 20
@@ -133,7 +139,7 @@ function drawBarChart(field, data){
     .data(data)
     .enter()
     .append("rect")
-    .attr("width",bw-1)
+    .attr("width",bw-2)
     .attr("height",function(d,i){
         return d[field]
     })
@@ -143,15 +149,42 @@ function drawBarChart(field, data){
     .attr("y",function(d,i){
         return h-d[field]
     })
+    .attr('fill',barHighlightColor)
     .on("click",function(d){
-        d3.selectAll("rect").attr("fill","black")
-        d3.select(this).attr('fill',"orange")
-        $('html,body').animate({
-                scrollTop: $(".year_"+d.year).offset().top-225 },
-                'slow');
-    })
+        d3.selectAll("rect").attr('fill',barHighlightColor)
+        d3.select(this).attr("fill","black")
+        if(d3.select(".year_"+d.year)["_groups"][0][0]!=null){
+            
+            $('html,body').animate({
+                    scrollTop: $(".year_"+d.year).offset().top },
+                    'slow');
+            }
+        })
+ 
 }
-    
+function makeKeywordButtons(data,splitBy,countData){
+    for(var i in keywords){
+        var keyword = keywords[i]
+        d3.select("#keywords").append("div").attr("class","keyword").attr("keyword",keyword).html(keyword)
+        .on("mouseover",function(){
+            d3.select(this).style('background-color',yellow)
+        })
+        .on("mouseout",function(){
+            d3.select(this).style('background-color',"#ffffff")
+        })
+        .on("click",function(){
+            d3.selectAll(".keyword").style("color","#000000").style("border","1px solid #000000")
+            d3.select(this).style("color",buttonHighlightColor2).style("border","1px solid "+buttonHighlightColor2)
+            var currentData = data[fields.indexOf(currentField)]
+            var currentKeyword = d3.select(this).attr("keyword")
+            keyWord = currentKeyword
+            
+            var formattedData = formatData(currentData,currentKeyword)
+            drawText(formattedData,currentKeyword,currentField)
+            drawBarChart(field, countData)
+        })
+    }
+}    
 function makeFieldButtons(data,splitBy,countData) {
     
     for(var i in fields){
@@ -159,19 +192,20 @@ function makeFieldButtons(data,splitBy,countData) {
         d3.select("#fields").append("div").attr("class","fieldButton").html(field.split("_").join(" "))
         .attr("class","field "+field)
         .style("cursor","pointer")
+        .attr("field",field)
         .on("mouseover",function(){
-            d3.select(this).style('background-color',"#dddddd")
+            d3.select(this).style('background-color',yellow)
         })
         .on("mouseout",function(){
             d3.select(this).style('background-color',"#ffffff")
         })
         .on("click",function(){
-            d3.selectAll(".field").style("color","#000000")
-            d3.select(this).style("color",highlightColor)
-            var currentField = d3.select(this).attr("class")
-            var currentData = data[fields.indexOf(currentField.split(" ")[1])]
+            d3.selectAll(".field").style("color","#000000").style("border","1px solid #000000")
+            d3.select(this).style("color",buttonHighlightColor).style("border","1px solid "+buttonHighlightColor)
+            currentField = d3.select(this).attr("field")
+            var currentData = data[fields.indexOf(currentField)]
             var formattedData = formatData(currentData,keyWord)
-            drawText(formattedData,splitBy,currentField)
+            drawText(formattedData,keyWord,currentField)
             drawBarChart(field, countData)
         })
     }
@@ -223,6 +257,7 @@ function formatData(data,splitBy){
             }
         }
     }
+    //gtgconsole.log(split)
     //split.sort(function(a,b){return a[0].length-b[0].length})
     split.sort(function(a,b){return a[1].year-b[1].year})
     return split
@@ -248,8 +283,8 @@ function drawText(data,splitBy,field){
     d3.selectAll(".row").remove()
     d3.selectAll(".year").remove()
     
-    d3.select("#countText").html("There are <strong>"+data.length+"</strong> instances of <strong>"+keyWord+"</strong> in paper abstracts from <strong>"+field.replace("_"," ")+"</strong>.")
-    var splitBy = "homophily"
+    d3.select("#countText").html("There are <strong>"+data.length+"</strong> instances of <strong>"+splitBy+"</strong> in paper abstracts from <strong>"+field.replace("_"," ")+"</strong>.")
+   // var splitBy = "homophily"
     var topMarginIndex = 0
     var topMargin = 0
     var fontSizeScaleTop = d3.scaleLinear().domain([0,maxAtLine]).range([maxFontSize,minFontSize])
@@ -272,8 +307,8 @@ function drawText(data,splitBy,field){
                 if(i>0){
                     if(data[i][1].year!=data[i-1][1].year){
                         d3.select("#chart1").append("div").attr("id","year_divider").html(data[i][1].year)
-                        .style("border-top","1px dotted orange")
-                        .style("color","orange")
+                        .style("border-top","1px dotted "+barHighlightColor)
+                        .style("color",barHighlightColor)
                         .style("font-size","20px")
                         .style("width","100%")
                         .style("height","12px")
@@ -282,8 +317,8 @@ function drawText(data,splitBy,field){
                     }
                 }else if(i==0){
                         d3.select("#chart1").append("div").attr("id","year_divider").html(data[0][1].year)
-                        .style("border-top","1px dotted orange")
-                        .style("color","orange")
+                        .style("border-top","1px dotted "+barHighlightColor)
+                        .style("color",barHighlightColor)
                         .style("font-size","20px")
                         .style("width","100%")
                         .style("height","12px")
@@ -298,7 +333,7 @@ function drawText(data,splitBy,field){
                 .attr("year",data[i][1].year)
                 .on("mouseover",function(){
                     d3.selectAll(".row").style("color","black")
-                    d3.select(this).style("color","orange")
+                    d3.select(this).style("color",concordanceHighlightColor)
 					var xPosition = parseFloat(d3.select(this).attr("x"))
 					var yPosition = parseFloat(d3.select(this).attr("y"))
 					d3.select("#tooltip")
@@ -312,6 +347,7 @@ function drawText(data,splitBy,field){
                         +d3.select(this).attr("author")+"<br>"
                         +d3.select(this).attr("year")
                     )
+                    .style("color",concordanceHighlightColor)
                     .style("visibility","visible")
                 })
                 .on("mouseout",function(){
@@ -324,9 +360,9 @@ function drawText(data,splitBy,field){
                 
                 
                 if(absList[0]==""){
-                    var ending = "<strong>&nbsp;Homophily</strong>"+absList[1]
+                    var ending = "<span style=\"color:"+wordHighlightColor+"\"><strong>&nbsp;"+splitBy+"</strong></span>"+absList[1]
                 }else{
-                    var ending = "<strong>&nbsp;homophily</strong>"+absList[1]
+                    var ending = "<span style=\"color:"+wordHighlightColor+"\"><strong>&nbsp;"+splitBy+"</strong></span>"+absList[1]
                 }
                 
                 
