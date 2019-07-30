@@ -45,7 +45,7 @@ body{
 #control{
     border:1px solid #aaa;
     padding:10px;
-    background-color:rgba(255,255,255,.8);
+    background-color:rgba(255,255,255,1);
     position:fixed;
     top:0px;
     left:0px;
@@ -64,11 +64,9 @@ body{
 #title{
     padding:10px;
     margin:5px;
-    width:200px;
     display:inline-block;
 }
 #fields{
-    width:250px;
     display:inline-block;
 }
 .keyword{
