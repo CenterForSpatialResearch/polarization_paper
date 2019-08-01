@@ -72,7 +72,7 @@
     var barHighlightColor = orange
     var wordHighlightColor = orange
     
-    document.title = field.split("_").join(" ")
+            document.title = field.split("_").join(" ")+" "+keyWord
     
     var promises = []
     for(var f in fields){
@@ -182,6 +182,8 @@ function makeKeywordButtons(data,splitBy,countData){
             var formattedData = formatData(currentData,currentKeyword)
             drawText(formattedData,currentKeyword,currentField)
             drawBarChart(field, countData)
+            document.title = currentField.split("_").join(" ")+" "+keyWord
+            
         })
     }
 }    
@@ -207,6 +209,7 @@ function makeFieldButtons(data,splitBy,countData) {
             var formattedData = formatData(currentData,keyWord)
             drawText(formattedData,keyWord,currentField)
             drawBarChart(field, countData)
+            document.title = currentField.split("_").join(" ")+" "+keyWord
         })
     }
 }   

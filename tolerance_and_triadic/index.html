@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>closure</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script type="text/javascript" src="d3.v5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="d3.v5.min.js"></script>
+      <link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+   <div id="all">
+   <div class="slidecontainer">
+       Starting Tolerance:<span id="startValue">value</span><br/>
+         <input type="range" min="1" max="100" value="10" class="slider" id="startingInput">
+         <br/><br/>
+       Growth Tolerance:  <span id="growthValue">value</span><br/>
+           <input type="range" min="1" max="100" value="10" class="slider" id="growthInput">
+           <br/>
+<!--
+           <input type="checkbox" name="vehicle3" value="Boat"> Triadic
+-->
+           <br/><br/>
+       Links Added:  <span id="linksAddedValue">value</span><br/>
+            <input type="range" min="1" max="1000" value="100" class="slider" id="linksAddedInput">
+            
+            
+   </div>
+ <!--
+    <div id="start" class="startstop">ADD 10 LINKS</div>
+     <div id="stop" class="startstop">ADD 100 LINKS</div>
+     <div id="reset" class="startstop">RESET</div>
+ -->
+ 
+    <div id="chart1"></div>
+    
+    </div>
+<script type="text/javascript"> 
+    
+var triadicMode = false
+var downloadInterval = 500
+    
+var svg = d3.select("#chart1").append("svg")
+    .attr("width",window.innerWidth)
+    .attr("height",window.innerHeight)
+var width = +svg.attr("width")
+var height = +svg.attr("height")
+
+var distance = 50
+var strength = -100
+    
+var size = 50
+
+var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
+var threshold =parseInt(document.getElementById("growthInput").value)/100;
+    
+var groups = 2
+var friends = 2
+    
+var newFriendships =100
+console.log(friends*size)
+
+var interval = 5
+
+var nodes = []
+var links = []
+
+makeNetworkData(thresholdStart)
+ 
+d3.select("#setup").html("SETUP<br>size: "+size+"<br>friends each: "+friends+"<br>"+"start tolerance: "+thresholdStart
+    +"<br>tolerance: "+threshold)
+  
+var groupColor = {
+    _0:"#bf9441",
+    _1:"#000000",
+    _2:"#fff"
+}
+var nodeRadius = 4
+var strokeColor = "#aaa"
+var strokeWidth = 1
+
+
+function makeNetworkData(threshold){
+    nodes =[]
+    links =[]
+    for(var i = 0; i<size; i++){
+        var groupNumber ="_"+Math.round(Math.random()*(groups-1))    
+        nodes.push({id:"node_"+i,group:groupNumber})
+    }
+
+    for(var n in nodes){
+        for(var f = 0; f<friends; f++){
+            var source = nodes[n]
+            var randomIndex = Math.round(Math.random()*(nodes.length-1))
+            var target = nodes[randomIndex]
+            if(Math.random()<threshold){
+                while(target.group == source.group){
+                    target = nodes[Math.round(Math.random()*(nodes.length-1))]
+                }
+            }else{
+                while(target.group != source.group){
+                    target = nodes[Math.round(Math.random()*(nodes.length-1))]
+                }
+            }        
+            var link = {source:source, target:target}
+            links.push(link)
+        }
+    }
+    var homophily = 0
+    for(var l in links){
+        if(links[l].source.group==links[l].target.group){
+            homophily+=1
+        }
+    }
+}
+
+
+function ticked() {
+    
+  node.attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+
+  link.attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+} 
+
+</script>
+<script src="inputControl.js"></script>
+<script src="add_triadic.js"></script>
+<script src="count.js"></script>
+
+</body>
+</html>
