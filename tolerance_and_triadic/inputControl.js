@@ -1,9 +1,11 @@
+    var timelineRecorder = [{threshold:.1,links:0}]
 
 function updateSlider(sliderDiv,displayDiv, thresholdVariable){
     var sliderStart = document.getElementById(sliderDiv);
     var outputStart = document.getElementById(displayDiv);
     
     var sliderValue = sliderStart.value
+    
     
     if(sliderDiv=="linksAddedInput"){
         outputStart.innerHTML = sliderValue;
@@ -29,7 +31,7 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
           simulation.nodes(nodes);
           simulation.force("link").links(links);
           simulation.alpha(1).restart();
-          restart()  
+          restart()
           
           var linksAddedValue = document.getElementById("linksAddedInput")
           linksAddedValue.value = 100
@@ -39,6 +41,8 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
       
       if(sliderDiv=="growthInput"){
           threshold = sliderValue/100
+          addTimelineMarker(links.length)          
+          //timelineRecorder.push([threshold,links.length])
       }
       
       if(sliderDiv=="linksAddedInput"){          
@@ -49,12 +53,22 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
               for(var i = 0; i<links.length-sliderValue;i++){
                   links.pop()
                   strength +=.2
-        simulation.force("charge", d3.forceManyBody().strength(strength))
-        .force("link", d3.forceLink(links).distance(distance))
+                  
+                simulation.force("charge", d3.forceManyBody().strength(strength))
+                .force("link", d3.forceLink(links).distance(distance))
+                  
               }
+               for(var t = 1000-links.length; t>0; t=t-1){
+                   d3.select(".timeline_"+(1000-t)).remove()
+               }
           }
           
           restart()  
+          addTimelineMarker(links.length)
+          if(threshold != timelineRecorder[timelineRecorder.length-1].threshold || links.length!=timelineRecorder[timelineRecorder.length-1].links){
+              timelineRecorder.push({threshold:threshold,links:links.length})
+          }
+          
       }
       
     }

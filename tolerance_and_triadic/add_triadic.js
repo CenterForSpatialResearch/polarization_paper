@@ -329,7 +329,7 @@ var simulation = d3.forceSimulation(nodes)
           .attr("fill",function(d){
               return groupColor[d.group]
           })
-          .attr("class",function(d){return d.id})
+          .attr("class",function(d){return d.id+" networkCircle"})
           .attr("r", nodeRadius)
           .merge(node)
           .on("mouseover",function(d){
@@ -338,7 +338,7 @@ var simulation = d3.forceSimulation(nodes)
               })
           })
         //added below to update color
-        d3.selectAll("circle")
+        d3.selectAll(".networkCircle")
           .each(function(d){
               d3.select(this).attr("fill",groupColor[d.group])
           })

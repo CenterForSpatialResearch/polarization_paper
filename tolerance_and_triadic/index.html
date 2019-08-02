@@ -6,34 +6,36 @@
     <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <title>closure</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-
-    <script type="text/javascript" src="d3.v5.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
-    <script src="d3.v5.min.js"></script>
+    <script src="../lib/d3.v5.min.js"></script>
+    <script src="../lib/colors.js"></script>
       <link rel="stylesheet" href="style.css">
 
 
 </head>
 <body>
    <div id="all">
+       <div id ="info">Adjust the tolerance of the network, then add links to see how the network will grow.<br/>
+           Drag total number of links back to 0 to start with a blank unlinked network.
+           <br/>
+           Try adding some links at 1 tolerance, then adjusting it and adding more links</div>
+       
    <div class="slidecontainer">
      <!--
        Starting Tolerance:<span id="startValue">value</span><br/>
               <input type="range" min="1" max="100" value="10" class="slider" id="startingInput">
               <br/><br/>-->
      
-       Tolerance:  <span id="growthValue">value</span><br/>
+       Tolerance:  <span id="growthValue">value</span><br/><br/>
            <input type="range" min="1" max="100" value="10" class="slider" id="growthInput">
 <!--
            <input type="checkbox" name="vehicle3" value="Boat"> Triadic
--->
-           <br/>
-       Links Added:  <span id="linksAddedValue">value</span><br/>
-            <input type="range" min="1" max="1000" value="100" class="slider sliderLinksAdded" id="linksAddedInput">
-            
-            
-   </div>
+-->           <br/>
 
+           <br/>
+       Total Number of Links:  <span id="linksAddedValue">value</span><br/><br/>
+            <input type="range" min="1" max="1000" value="0" class="slider sliderLinksAdded" id="linksAddedInput">
+   </div>
     <div id="chart1"></div>
     
     </div>
@@ -57,7 +59,7 @@ var thresholdStart =.1//var thresholdStart = parseInt(document.getElementById("s
 var threshold =parseInt(document.getElementById("growthInput").value)/100;
     
 var groups = 2
-var friendsToMake = 2
+var friendsToMake = 0
     
 var newFriendships =100
 
