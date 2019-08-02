@@ -47,7 +47,13 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
       
       if(sliderDiv=="linksAddedInput"){          
           if(sliderValue>links.length){
-              addLink(sliderValue-links.length)
+              //addLink(sliderValue-links.length)
+           //    addTriadicLink(sliderValue-links.length)
+              if(triadicMode==true){
+                  addMostCommonLink(sliderValue-links.length)
+              }else{
+                    addLink(sliderValue-links.length)
+              }
               drawTimeline(sliderValue,threshold)
           }else{
               for(var i = 0; i<links.length-sliderValue;i++){
@@ -133,5 +139,131 @@ function addLink(quantity){
     for(var i =0; i<quantity; i++){
         strength -=.2
         
+    }
+}
+
+function addMostCommonLink(quantity){
+    var linksTracker = []
+    var linksMade = 0
+     while(linksMade<quantity){
+         //get random node
+        var randomSource = nodes[Math.round(Math.random()*(nodes.length-1))]
+         
+         //get its neighbors
+        var neighbors = getNeighbors(randomSource.id)
+         var nIds = []
+         for(var j in neighbors){
+             nIds.push(neighbors[j].id)
+         }
+         //get its neibhors' neighbors
+         var nOfNs = []
+         for(var i in neighbors){
+             var neighbor = neighbors[i]
+             var nOfN = getNeighbors(neighbor.id)
+             nOfNs=nOfNs.concat(nOfN)
+         }
+         var nOfNCount = {}
+         for(var k in nOfNs){
+             var id = nOfNs[k].id
+             if(nIds.indexOf(id)==-1 && id!=randomSource.id){
+                 if(Object.keys(nOfNCount).indexOf(id)>-1){
+                     nOfNCount[id]+=1
+                 }else{
+                     nOfNCount[id]=1
+                 }
+             }
+         }
+         var nOfNCountArray = Object.keys(nOfNCount).map(function(key) {
+           return [key, nOfNCount[key]];
+         });
+         nOfNCountArray.sort(function(first, second) {
+           return second[1] - first[1];
+         });
+        var mostInCommonId = nOfNCountArray[0][0]
+        var mostInCommonNode = getNodeById(mostInCommonId)
+        
+         if(parseInt(randomSource.id.split("_")[1])<parseInt(mostInCommonNode.id.split("_")[1])){
+             var link = {source:randomSource, target:mostInCommonNode}
+         }else{
+             var link = {source:mostInCommonNode, target:randomSource}
+         }
+         var currentLinkIds = link.source.id+"_"+link.target.id
+         
+         if(linksTracker.indexOf(currentLinkIds)==-1){
+             links.push(link)
+             linksTracker.push(currentLinkIds)
+             linksMade+=1
+            updateLinks()
+        strength -=.2
+             
+            simulation.force("charge", d3.forceManyBody().strength(strength))
+            .force("link", d3.forceLink(links).distance(distance))
+         }
+       
+     }
+}
+function addTriadicLink(quantity){
+    var linksTracker = []
+    var linksMade = 0
+    while(linksMade<quantity){
+        var randomSource = nodes[Math.round(Math.random()*(nodes.length-1))]
+        var neighbors = getNeighbors(randomSource.id)
+
+        var nOfAll = []
+        var mostInCommonCount = 0
+        var mostInCommonNode = null
+       
+        for(var n in nodes){
+            var currentInCommonCount = 0
+            var nId = nodes[n].id
+            var nOfN = getNeighbors(nId)
+            for(var l in nOfN){
+                if(neighbors.indexOf(nOfN[l])>-1){
+                    //console.log("in common"+nOfN[l].id)
+                    
+                    if(parseInt(randomSource.id.split("_").id)>parseInt(nodes[n].id.split("_")[1])){
+                        var currentLinkIds=nodes[n].id+"_"+randomSource.id
+                    }else{
+                         var currentLinkIds = randomSource.id+"_"+nodes[n].id
+                    }
+                    
+                    if(neighbors.indexOf(nodes[n])==-1){
+                        if(linksTracker.indexOf(currentLinkIds)==-1){
+                            var newLink = {source: randomSource, target: nodes[n]}
+                            links.push({source: randomSource, target: nodes[n]})
+                            linksMade+=1
+                            restart()
+                            updateLinks()
+                            strength -=.2
+                            simulation.force("charge", d3.forceManyBody().strength(strength))
+                            .force("link", d3.forceLink(links).distance(distance))
+                            
+                            nodes = nodes.sort(function (a,b){
+           
+                                  a["tempIndex"]=Math.random()
+                                  b["tempIndex"]=Math.random()
+                                  return a.tempIndex-b.tempIndex
+                              })
+                              
+                            console.log(nodes)
+                              
+                        }
+                    }
+                }
+            }
+        }   
+        return
+            
+        
+        if(linksTracker.indexOf(currentLinkIds)==-1){
+                console.log("ok")
+                links.push({source: randomSource, target: mostInCommonNode})
+                linksMade+=1
+                restart()
+                updateLinks()
+                linksTracker.push(currentLinkIds)
+        }else{
+            console.log("repeat")
+        }            
     }
 }

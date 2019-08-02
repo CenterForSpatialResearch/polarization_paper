@@ -20,28 +20,53 @@
            <br/>
            Try adding some links at 1 tolerance, then adjusting it and adding more links</div>
        
+      
+      <div id="triadicInfo">  <strong>*Triadic Closure:</strong> Triadic closure refers to the linking of a and c in a situation where a and b are linked and b and c are linked - those creating a ridgid triangle in the network. 
+          In our simulation, we combine the idea of having the most in common with triadic closure by prioritizing the formation of links between a node and its neighbor's neighbor with the most neighbors in common (whose linking would also automatically create a triadic closure)<br/>
+         <strong> NOTE:</strong> in order to create triadic closures between nodes in the network, you must already have linked nodes to build upon.</div>
    <div class="slidecontainer">
      <!--
        Starting Tolerance:<span id="startValue">value</span><br/>
               <input type="range" min="1" max="100" value="10" class="slider" id="startingInput">
               <br/><br/>-->
      
-       Tolerance:  <span id="growthValue">value</span><br/><br/>
+       <span id="tolerance">Tolerance:</span>  <span id="growthValue">value</span><br/><br/>
            <input type="range" min="1" max="100" value="10" class="slider" id="growthInput">
-<!--
-           <input type="checkbox" name="vehicle3" value="Boat"> Triadic
--->           <br/>
+           <br/>
+           <br/>
+<div id="triadic">Triadic Closure*: OFF<br/>(click to turn on)</div>
+      
+  </span>
+</label>           <br/>
 
            <br/>
        Total Number of Links:  <span id="linksAddedValue">value</span><br/><br/>
-            <input type="range" min="1" max="1000" value="0" class="slider sliderLinksAdded" id="linksAddedInput">
+            <input type="range" min="1" max="1000" value="100" class="slider sliderLinksAdded" id="linksAddedInput">
    </div>
     <div id="chart1"></div>
     
     </div>
-<script type="text/javascript"> 
     
+    <div id="hideTolerance"></div>
+    
+<script type="text/javascript"> 
 var triadicMode = false
+    
+    
+d3.select("#triadic")
+    .style("cursor","pointer")
+    .on("click",function(){ 
+        if(triadicMode==true){
+            triadicMode=false
+            d3.select("#triadic").style("font-weight","normal").html("Triadic Closure*: OFF<br/><br/>")
+            d3.select("#hideTolerance").style("visibility","hidden")
+        }else{
+            triadicMode=true 
+            d3.select("#triadic").style("font-weight","bold").html("Triadic Closure*: ON<br/><br/>")
+            d3.select("#hideTolerance").style("visibility","visible")
+        }
+    })
+    
 var downloadInterval = 500
     
 var svg = d3.select("#chart1").append("svg")
@@ -59,7 +84,7 @@ var thresholdStart =.1//var thresholdStart = parseInt(document.getElementById("s
 var threshold =parseInt(document.getElementById("growthInput").value)/100;
     
 var groups = 2
-var friendsToMake = 0
+var friendsToMake = 2
     
 var newFriendships =100
 

@@ -35,7 +35,20 @@ function drawTimeline(linksCount,threshold){
         .attr("class","timelineRect timeline_"+lastRecord)
         .attr("timelineLink",lastRecord)
         .attr("transform","translate("+ml+","+mt+")")
-        .attr("opacity",.2)
+        .attr("fill",function(){
+            if(triadicMode==false){
+                return "#000"
+            }else{
+                return "red"
+            }
+        })
+        .attr("opacity",function(){
+            if(triadicMode==false){
+                return .5
+            }else{
+                return .2
+            }
+        })
     }
     
 }
@@ -121,4 +134,4 @@ function drawTimelineAxis(){
 drawTimelineAxis()
 //drawTimeline(100,threshold)
 
-addTimelineMarker(0)
+addTimelineMarker(100)
