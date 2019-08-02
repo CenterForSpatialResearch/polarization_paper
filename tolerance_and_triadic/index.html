@@ -17,27 +17,23 @@
 <body>
    <div id="all">
    <div class="slidecontainer">
+     <!--
        Starting Tolerance:<span id="startValue">value</span><br/>
-         <input type="range" min="1" max="100" value="10" class="slider" id="startingInput">
-         <br/><br/>
-       Growth Tolerance:  <span id="growthValue">value</span><br/>
+              <input type="range" min="1" max="100" value="10" class="slider" id="startingInput">
+              <br/><br/>-->
+     
+       Tolerance:  <span id="growthValue">value</span><br/>
            <input type="range" min="1" max="100" value="10" class="slider" id="growthInput">
-           <br/>
 <!--
            <input type="checkbox" name="vehicle3" value="Boat"> Triadic
 -->
-           <br/><br/>
+           <br/>
        Links Added:  <span id="linksAddedValue">value</span><br/>
-            <input type="range" min="1" max="1000" value="100" class="slider" id="linksAddedInput">
+            <input type="range" min="1" max="1000" value="100" class="slider sliderLinksAdded" id="linksAddedInput">
             
             
    </div>
- <!--
-    <div id="start" class="startstop">ADD 10 LINKS</div>
-     <div id="stop" class="startstop">ADD 100 LINKS</div>
-     <div id="reset" class="startstop">RESET</div>
- -->
- 
+
     <div id="chart1"></div>
     
     </div>
@@ -57,14 +53,13 @@ var strength = -100
     
 var size = 50
 
-var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
+var thresholdStart =.1//var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
 var threshold =parseInt(document.getElementById("growthInput").value)/100;
     
 var groups = 2
-var friends = 2
+var friendsToMake = 2
     
 var newFriendships =100
-console.log(friends*size)
 
 var interval = 5
 
@@ -73,7 +68,7 @@ var links = []
 
 makeNetworkData(thresholdStart)
  
-d3.select("#setup").html("SETUP<br>size: "+size+"<br>friends each: "+friends+"<br>"+"start tolerance: "+thresholdStart
+d3.select("#setup").html("SETUP<br>size: "+size+"<br>friends each: "+friendsToMake+"<br>"+"start tolerance: "+thresholdStart
     +"<br>tolerance: "+threshold)
   
 var groupColor = {
@@ -82,9 +77,8 @@ var groupColor = {
     _2:"#fff"
 }
 var nodeRadius = 4
-var strokeColor = "#aaa"
+var strokeColor = "#000000"
 var strokeWidth = 1
-
 
 function makeNetworkData(threshold){
     nodes =[]
@@ -93,23 +87,36 @@ function makeNetworkData(threshold){
         var groupNumber ="_"+Math.round(Math.random()*(groups-1))    
         nodes.push({id:"node_"+i,group:groupNumber})
     }
-
+    var linksTracker = []
     for(var n in nodes){
-        for(var f = 0; f<friends; f++){
+        var existingFriends = 0
+        while(existingFriends<friendsToMake){
             var source = nodes[n]
             var randomIndex = Math.round(Math.random()*(nodes.length-1))
             var target = nodes[randomIndex]
             if(Math.random()<threshold){
-                while(target.group == source.group){
+                while(target.group == source.group || source.id == target.id){
                     target = nodes[Math.round(Math.random()*(nodes.length-1))]
                 }
             }else{
-                while(target.group != source.group){
+                while(target.group != source.group || source.id == target.id){
                     target = nodes[Math.round(Math.random()*(nodes.length-1))]
                 }
-            }        
-            var link = {source:source, target:target}
-            links.push(link)
+            }
+        
+            if(parseInt(source.id.split("_")[1])<parseInt(target.id.split("_")[1])){
+                var link = {source:source, target:target}
+            }else{
+                var link = {source:target, target:source}
+            }
+            
+            var currentLinkIds = link.source.id+"_"+link.target.id
+            
+            if(linksTracker.indexOf(currentLinkIds)==-1){
+                links.push(link)
+                linksTracker.push(currentLinkIds)
+                existingFriends+=1
+            }
         }
     }
     var homophily = 0
@@ -119,7 +126,6 @@ function makeNetworkData(threshold){
         }
     }
 }
-
 
 function ticked() {
     
@@ -136,6 +142,7 @@ function ticked() {
 <script src="inputControl.js"></script>
 <script src="add_triadic.js"></script>
 <script src="count.js"></script>
+<script src="timeline.js"></script>
 
 </body>
 </html>

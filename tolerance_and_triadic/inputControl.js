@@ -40,12 +40,17 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
       if(sliderDiv=="growthInput"){
           threshold = sliderValue/100
       }
+      
       if(sliderDiv=="linksAddedInput"){          
           if(sliderValue>links.length){
               addLink(sliderValue-links.length)
+              drawTimeline(sliderValue,threshold)
           }else{
               for(var i = 0; i<links.length-sliderValue;i++){
                   links.pop()
+                  strength +=.2
+        simulation.force("charge", d3.forceManyBody().strength(strength))
+        .force("link", d3.forceLink(links).distance(distance))
               }
           }
           
@@ -64,7 +69,9 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
 
 
 
+/*
 updateSlider("startingInput","startValue", thresholdStart)
+*/
 updateSlider("growthInput","growthValue", threshold)
 
 updateSlider("linksAddedInput","linksAddedValue", threshold)
@@ -72,9 +79,12 @@ updateSlider("linksAddedInput","linksAddedValue", threshold)
 
 
 function addLink(quantity){
-            console.log(threshold)
+    var linksTracker = []
     
-    for(var i =0; i<quantity; i++){
+    simulation.force("charge", d3.forceManyBody().strength(strength))
+    .force("link", d3.forceLink(links).distance(distance))
+    var linksMade = 0
+    while(linksMade<quantity){
         var randomSource = nodes[Math.round(Math.random()*(nodes.length-1))]
         var target = nodes[Math.round(Math.random()*(nodes.length-1))]
         var existingTargets = getNeighbors(randomSource.id)
@@ -90,7 +100,24 @@ function addLink(quantity){
                 target = nodes[Math.round(Math.random()*(nodes.length-1))]
             }
         }
-        links.push({source: randomSource, target: target})
+        
+        if(parseInt(randomSource.id.split("_")[1])<parseInt(target.id.split("_")[1])){
+            var link = {source:randomSource, target:target}
+        }else{
+            var link = {source:target, target:randomSource}
+        }
+        
+        var currentLinkIds = link.source.id+"_"+link.target.id
+        
+        if(linksTracker.indexOf(currentLinkIds)==-1){
+            links.push(link)
+            linksTracker.push(currentLinkIds)
+            linksMade+=1
+        }
         updateLinks()
+    }
+    for(var i =0; i<quantity; i++){
+        strength -=.2
+        
     }
 }

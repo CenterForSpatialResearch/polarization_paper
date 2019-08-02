@@ -43,10 +43,11 @@
         display:inline-block;
         padding:10px;
     }
+  
     .slider {
       -webkit-appearance: none;  /* Override default CSS styles */
       appearance: none;
-      width: 200px; /* Full-width */
+      width: 100px; /* Full-width */
       height: 20px; /* Specified height */
       background: #ffffff; /* Grey background */
       border:3px solid #000000;
@@ -54,6 +55,10 @@
       opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
       -webkit-transition: .2s; /* 0.2 seconds transition on hover */
       transition: opacity .2s;
+    }
+    .sliderLinksAdded{
+        width: 600px; /* Full-width */
+        height: 10px; /* Specified height */
     }
     .slider::-webkit-slider-thumb {
       -webkit-appearance: none; /* Override default look */

@@ -25,15 +25,7 @@ var simulation = d3.forceSimulation(nodes)
 
         restart();
         
-d3.select("#start").on("click",function(){
-     for(var i =1; i<=newFriendships; i++){
-         if(triadicMode==true){
-           addMostCommonFriend(2000+i*interval,i)   
-         }else{
-           addFriend(2000+i*interval,i)   
-         }
-     }   
-})
+
    // restart();
     var sources
     var sourcesMap
@@ -359,7 +351,8 @@ d3.select("#start").on("click",function(){
       .attr("class",function(d){
           return d.source.id + "_" + d.target.id;
       })
-      .attr("stroke", strokeColor).attr("stroke-width",strokeWidth).attr("opacity",.2)
+      .attr("stroke", strokeColor).attr("stroke-width",strokeWidth)
+      .attr("opacity",.2)
       .merge(link);
     //  // Update and restart the simulation.
       simulation.nodes(nodes);
