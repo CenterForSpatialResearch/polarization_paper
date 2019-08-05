@@ -46,6 +46,20 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
       }
       
       if(sliderDiv=="linksAddedInput"){          
+          if(sliderValue<=1){
+              links = []
+                updateLinks()
+              restart()
+              d3.selectAll(".timelineRect").remove()
+          }
+          
+    var linksAddedScale = d3.scaleLinear().domain([0,1000]).range([0,timelineUtil.w])    
+          
+     //   d3.select(".progressMask")
+     //   .transition()
+     //   .attr("width",linksAddedScale(1000-sliderValue))
+     //   .attr("x",linksAddedScale(sliderValue))
+     //   
           if(sliderValue>links.length){
               //addLink(sliderValue-links.length)
            //    addTriadicLink(sliderValue-links.length)
@@ -64,6 +78,14 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
                 .force("link", d3.forceLink(links).distance(distance))
                   
               }
+              
+              d3.selectAll(".timelineRect")
+              .each(function(d,i){
+                  if(i>links.length){
+                      d3.select(this).remove()
+                  }
+              })
+              
                for(var t = 1000-links.length; t>0; t=t-1){
                    d3.select(".timeline_"+(1000-t)).remove()
                }

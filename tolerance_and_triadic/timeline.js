@@ -8,7 +8,6 @@ var timelineUtil = {
 }
 
 function drawTimeline(linksCount,threshold){
-   // console.log(timelineRecorder)
     //console.log([linksCount,threshold])
     var w = timelineUtil.w
     var h = timelineUtil.h
@@ -26,12 +25,17 @@ function drawTimeline(linksCount,threshold){
     
     var lastRecord = timelineRecorder[timelineRecorder.length-1].links
     
-    for(var l = 0; l<linksCount-lastRecord;l++){
-        timelineSvg.append("rect")
-        .attr("x",linksAddedScale(lastRecord+l))
+
+        timelineSvg.selectAll(".timelineRect")
+        .data(links)
+        .enter()
+        .append("rect")
+        .attr("x",function(d,i){
+            return linksAddedScale(i)
+        })
         .attr("y",thresholdScaleR(threshold))
         .attr("width",1)
-        .attr("height",h-thresholdScaleR(threshold))
+        .attr("height",2)//h-thresholdScaleR(threshold))
         .attr("class","timelineRect timeline_"+lastRecord)
         .attr("timelineLink",lastRecord)
         .attr("transform","translate("+ml+","+mt+")")
@@ -46,10 +50,9 @@ function drawTimeline(linksCount,threshold){
             if(triadicMode==false){
                 return .5
             }else{
-                return .2
+                return .5
             }
         })
-    }
     
 }
 
@@ -66,10 +69,10 @@ function addTimelineMarker(linksCount){
 
     d3.select("#chart1 svg").append("circle")
     .attr("class","timelineMarker")
-    .attr("r",5)
+    .attr("r",4)
     .attr("fill","#000")
     .attr("cx",linksAddedScale(linksCount))
-    .attr("cy",h-thresholdScale(threshold))
+    .attr("cy",h-thresholdScale(threshold)+1)
     .attr("transform","translate("+ml+","+mt+")")
 }
 
@@ -83,6 +86,9 @@ function drawTimelineAxis(){
     var thresholdScale = d3.scaleLinear().domain([0,1]).range([0,100])
     var linksAddedScale = d3.scaleLinear().domain([0,1000]).range([0,w])
     var thresholdScaleR = d3.scaleLinear().domain([0,1]).range([h,0])
+    
+    
+   
     
     d3.select("#chart1 svg").append("text")
         .text("Network Growth Tracking Timeline")
@@ -130,8 +136,22 @@ function drawTimelineAxis(){
         .call(xAxis)
         .attr("transform","translate("+ml+","+(mt+h)+")")
 }
-
+function drawMask(linkLength){
+    var w = timelineUtil.w
+    var linksAddedScale = d3.scaleLinear().domain([0,1000]).range([0,w])
+    
+    d3.selectAll("progressMask").remove()
+    d3.select("#chart1 svg").append("rect")
+    .attr("x",0)
+    .attr("y",0)
+    .attr("width",w)
+    .attr("height",h)
+    .attr("fill","#fff")
+    .attr("opacity",.9)
+    .attr("transform","translate("+ml+","+(mt)+")")
+    .attr("class","progressMask")
+}
 drawTimelineAxis()
-//drawTimeline(100,threshold)
+drawTimeline(100,threshold)
 
 addTimelineMarker(100)
