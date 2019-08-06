@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>closure</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="../lib/d3.v5.min.js"></script>
+    <script src="../lib/colors.js"></script>
+      <link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+    <div id="intro">
+     
+        <div id="intro-text" class="half"><br><br><br><br>
+        <p>The word “homophily” was coined in a 1954 paper by Paul F. Lazarsfeld
+and Robert K. Merton in an influential study of friendship in a mixedrace housing project in Pittsburgh, Pennsylvania. The researchers were
+suspicious of the “familiar and egregiously misleading question: do
+birds of a feather flock together?”1
+ They concluded that friendships
+form and persist not simply on the basis of shared identities but also
+thanks to shared values and beliefs. They focused on “racial attitudes.”
+The afterlife of the concept has been remarkable. Today, the
+assumption of homophily underlies social and economic interactions
+online, as platforms reinforce the axiom that “similarity breeds
+connection.” What began as a description of social life has become a rule for algorithms shaping social interactions online.</p>
+    </div>
+    <div id="intro-title" class="half">
+        <span style="color:#aaaaaa;">Raced<br/>
+        History<br/></span>
+        Defining<br/>
+        Homophily
+    </div>
+    </div>
+  <div id="housing">
+      <div id ="housing-text" class="half">
+  <p>
+      A Concept Born in a Mixed-Race
+      Housing Project
+      Merton, a sociologist, directed the Columbia-Lavanburg Studies of
+      the Social Organization of Housing Communities. Beginning in 1947,
+      Columbia University researchers conducted a survey of residents
+      of Addison Terrace, in Pittsburgh, to try to understand the effects of
+      “tenant morale” on the success of housing projects. At the time of the
+      study, Addison Terrace had recently been completed. Built with federal
+      funding for public housing made available for the first time through the
+      Housing Act of 1937, the project was dedicated by President Franklin
+      Delano Roosevelt in 1940. It was demolished in 2015.
+</p>
+<p>
+      In a 1951 essay commissioned for the Columbia-Lavanburg project,
+      prominent progressive housing advocate Catherine Bauer questioned
+      the assumption that cohesive neighborhoods are dependent on “a high
+      degree of social similarity” and echoed the liberal optimism of the
+      time that social science research would help in reversing patterns of
+      segregation.
+  </p>
+</div>
+  </div>
+ <div id="questions">
+     <div id ="questions-title" class = half>
+     <p>To study social dynamics within planned public housing communities, Merton, together with
+     researchers Patricia Salter West and Marie Jahoda, conducted an extensive survey of residents at
+     Addison Terrace, which they code-named “Hilltown.”</p>
+     
+ </div>
+ 
+ <div id ="questionsSelected" class="half">
+     <p>Of the more than <span style="text-decoration:underline">ninety</span> questions that made up the survey, Merton and Lazarsfeld focused on only <span style="text-decoration:underline">two</span> in their 1954 paper.</p>
+     <img src="img/2_questions.jpg" width="100%">
+     
+   <!--
+     <span style="color:red; font-weight:bold;"><p>25. Do you think colored and white people should live together in housing projects?</p>
+        <p>26. "On the whole, do you think that colored and white in the Village get along pretty well, or not so well?"</p></span>-->
+   
+     
+     <p>Rollover the questions number to see what other questions they asked.</p>
+ </div>
+ <div id ="questions-content" class = "half"> </div>
+
+ 
+ </div>
+
+ 
+
+ </div>   
+<script type="text/javascript"> 
+ d3.csv("questions.csv").then(function(data) {
+    var questionGraphic = d3.select("#questionsSelected").append("g")
+    
+    questionGraphic.selectAll(".individualQuestion").data(data)
+        .enter()
+        .append("div")
+        .style("background-color",function(d,i){
+            if(i==24 ||i==25){
+                return "red"
+            }
+        })
+        .attr("class","individualQuestion")
+        .html(function(d,i){
+            return d.number
+        })
+        .on("mouseover",function(d){
+            d3.select(this).style("background-color","black")
+            d3.select("#questions-content").html(d.number+". "+d.question)
+        })
+        .on("mouseout",function(d,i){
+            if(i==24 ||i==25){
+                d3.select(this).style("background-color","red")
+            }else{
+                d3.select(this).style("background-color","#aaa")
+            }
+            d3.select("#questions-content").html("")
+        })
+});
+</script>
+
+</body>
+</html>
