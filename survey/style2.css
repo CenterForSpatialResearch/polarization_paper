@@ -1,8 +1,16 @@
+@font-face{
+    font-family:stanhope;
+      src: url(StanhopeRR-Medium.otf);
+}
+
 body { 
+    font-size:14px;
+    padding:20px;
       margin:0;
+      color:#000;
       position:fixed;
       top:0;right:0;bottom:0;left:0;
-    	font-family: Helvetica, Arial;
+      font-family:stanhope;
    	}
     #container {
       position: relative;
