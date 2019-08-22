@@ -18,18 +18,25 @@
     body{
         font-size:14px;
         color:#000;
-        padding:20px;
-        margin:0px;
         font-family:stanhope;
     }
     #intro{
         width:100%;
+        padding:10px;
+        position:fixed;
+        background-color:#fff;
+        top:0px;
+        border-bottom:1px solid black;
+    }
+    p{
+        width:90%;
     }
     #scroll{
-        height:600px;
+        height:100%;
         overflow:auto;
         max-width:800px;
-    
+        float:top;
+        margin-top:110px;
     }
     .archival{
         max-width:800px;
@@ -51,37 +58,32 @@
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-      background: #ee3d96; 
+      background: #000; 
     }
 </style>
 
 </head>
 <body>
- <div id="questions">
-
  
- <div id ="questionsSelected" class="half">
-     <p>To study social dynamics within planned public housing communities, Merton, together with
-     researchers Patricia Salter West and Marie Jahoda, conducted an extensive survey of residents at
-     Addison Terrace, which they code-named “Hilltown.” Of the more than <span style="text-decoration:underline">ninety</span> questions that made up the survey, Merton and Lazarsfeld focused on only <span style="text-decoration:underline">two</span> in their 1954 paper.</p>
-     <img class ="archival" src="img/questions_24_25.jpg" width="100%">
- 
-     
-     <p>Scroll to see all the other questions that were asked in the survey but not used in the final work.</p>
+ <div id ="intro">
+     <p>Of the more than ninety questions that made up the survey, Merton and Lazarsfeld focused on only <span class="two" style="text-decoration:underline; color:#ee3d96">two</span> in their 1954 paper. Scroll to see all the questions that were asked in the survey but not used in the final work.</p>
      
  </div>
 
 <div id="scroll">
     <img class ="archival" src="img/questions_1_24.jpg" width="100%">
-    <img class ="archival" src="img/questions_24_25_highlighted.jpg" width="100%">
+    <img class ="selected" src="img/questions_24_25_highlighted.jpg" width="100%">
     <img class ="archival" src="img/questions_27_94.jpg" width="100%">
-    
 </div>
  
 
- </div>   
-<script type="text/javascript"> 
-
+<script type="text/javascript">
+    d3.select(".two").on('click',function(){
+        console.log("loo")
+        $('html,scroll').animate({
+                scrollTop: $(".selected").offset().top -120 },
+                'slow');
+    })
 </script>
 
 </body>
