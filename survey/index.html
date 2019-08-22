@@ -78,12 +78,15 @@
  
 
 <script type="text/javascript">
-    d3.select(".two").on('click',function(){
-        console.log("loo")
-        $('html,scroll').animate({
-                scrollTop: $(".selected").offset().top -120 },
-                'slow');
-    })
+    if (navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/)) {           
+                window.scrollTo(0,1000) // first value for left offset, second value for top offset
+    }else{
+        d3.select(".two").on('click',function(){
+            $('html,scroll').animate({
+                    scrollTop: $(".selected").offset().top -120 },
+                    'slow');
+        })
+    }
 </script>
 
 </body>
