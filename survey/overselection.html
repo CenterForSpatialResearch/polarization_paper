@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>overselection</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="../lib/d3.v5.min.js"></script>
+    <script src="../lib/colors.js"></script>
+<style>
+    @font-face{
+        font-family:stanhope;
+          src: url(StanhopeRR-Medium.otf);
+    }
+    body{
+        font-size:14px;
+        color:#000;
+        font-family:stanhope;
+        background-color:#000;
+    }
+    #intro{
+        width:100%;
+        padding:10px;
+        position:fixed;
+        background-color:#fff;
+        top:0px;
+        border-bottom:1px solid black;
+    }
+    p{
+        width:90%;
+    }
+    #scroll{
+        min-width:800px;
+        max-width:1000px;
+        overflow:auto;
+        float:top;
+        margin:0 auto
+        margin-top:10px;
+        height:600px;
+    }
+    .archival{
+        max-width:800px;
+    }
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f8c1d9; 
+    }
+ 
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #ee3d96;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #000; 
+    }
+    #steps{
+        display:inline-block;
+        width:100%;
+        min-width:800px;
+        max-width:1000px;
+    }
+    .step{
+        display:inline-block;
+        width:18%;
+        border:1px solid black;
+        padding:5px;
+        vertical-align:top;
+        height:220px;
+        overflow:auto;
+        background-color:#fff;
+    }
+    p{
+        font-size:10px;
+    }
+</style>
+
+</head>
+<body>
+ 
+<div id="steps">
+    <div class="step" id="survey">
+        <span class="title">A Survey on Housing</span>
+        <p>
+To study social dynamics within planned public housing communities, Merton, together with researchers Patricia Salter West and Marie Jahoda, conducted an extensive survey of residents at Addison Terrace, which they code-named “Hilltown.” Of the more than ninety questions that made up the survey, Merton and Lazarsfeld focused on only two in their 1954 paper.
+</p>
+    </div>
+    <div class="step" id="types">
+        <span class="title">Three Types of Hilltowners</span>
+    <p>
+The answers to these two questions helped Merton and Lazarsfeld divide the residents of Addison Terrace into three types: “liberals,” who believed that housing projects should be integrated and that people there “got along pretty well”; “illiberals,” who supported segregation and thought that people there failed to get along; and “ambivalent” residents, segregationists who nonetheless admitted that integration worked in Addison Terrace</p>
+    </div>
+    <div class="step" id="erasure">
+        <span class="title">Erasure of Black Population</span>
+    <p>
+Lazarsfeld and Merton excluded responses from black residents to make statistically valid conclusions defining homophily as these residents were almost all “liberals.”3</p>
+    </div>
+    <div class="step" id="friendship">
+        <span class="title">Friendships</span>
+    <p>
+Among the white residents, Lazarsfeld and Merton concluded that “there are definite patterns of friendship in terms of racial values.”4 Liberals were more likely to be close friends with liberals, and illiberals with illiberals. (The ambivalent residents, who comprised the largest category of white residents, “expressed their uncertain and inconsistent racial values” through friendships with members of all three groups.) In short, they said that “value homophily prevails.</p>
+    </div>
+    <div class="step" id="overselection">
+        <span class="title">Overselection</span>
+    <p>
+To arrive at this conclusion, the researchers showed that the relationship between friendship
+and shared values was not random: of the 31 percent of white residents categorized as liberal, 45 percent had friendships with other liberals, showing that liberals tend to overselect other liberals as friends. Likewise, of the 19 percent categorized as illiberal, 24 percent said they were friends with other illiberals. These disproportionate percentages demonstrated, as well as defined, homophily even though they were present only for a minority of the overall survey respondents.</p>
+    </div>
+</div>
+<div id="scroll" class="scroll">
+    <img class="scrollImg" src="img/survey_overselection_noText.gif">
+</div>
+ 
+
+<script type="text/javascript">
+    d3.selectAll(".step").attr("checked",false)
+    d3.select("#survey").style("background-color","#fff200").attr("checked",true)
+    
+    
+    function clickColorHandler(objectId){
+        d3.selectAll(".step").attr("checked",false).style("background-color","#ffffff")
+        d3.select("#"+objectId).attr("checked",true).style("background-color","#fff200")
+        
+       // d3.selectAll(".step").each(function(){
+       //     if(d3.select(this).attr("checked")==true){
+       //         d3.select(this).style("background-color","#fff200")
+       //     }
+       // })
+    }
+    
+    $(".scroll").scroll(function(){
+      var offset = Math.abs($(".scrollImg").offset().left)    
+        if(offset<1000){
+            d3.selectAll(".step").style("background-color","#ffffff")
+            d3.select("#survey").style("background-color","#fff200")
+        }else if(offset>900 && offset <1900){
+            d3.selectAll(".step").style("background-color","#ffffff")
+            d3.select("#types").style("background-color","#fff200")
+        }else if(offset>1900 && offset <2900){
+            d3.selectAll(".step").style("background-color","#ffffff")
+            d3.select("#erasure").style("background-color","#fff200")
+        }else if(offset>2900 && offset <3900){
+            d3.selectAll(".step").style("background-color","#ffffff")
+            d3.select("#friendship").style("background-color","#fff200")
+        }else if(offset>3900){
+            d3.selectAll(".step").style("background-color","#ffffff")
+            d3.select("#overselection").style("background-color","#fff200")
+        }
+        
+    })
+    
+   
+    d3.select("#survey").on('click',function(){        
+       $(".scroll").scrollLeft(0)
+        clickColorHandler("survey")
+    })
+    d3.select("#types").on('click',function(){
+       $(".scroll").scrollLeft(1000)
+        clickColorHandler("types")
+    })
+    d3.select("#erasure").on('click',function(){
+       $(".scroll").scrollLeft(2000)
+        clickColorHandler("erasure")
+    })
+    d3.select("#friendship").on('click',function(){
+       $(".scroll").scrollLeft(3000)
+        clickColorHandler("friendship")
+    })
+    d3.select("#overselection").on('click',function(){
+       $(".scroll").scrollLeft(4000)
+        clickColorHandler("overselection")
+    })
+    
+    
+   
+ 
+    
+</script>
+
+</body>
+</html>
