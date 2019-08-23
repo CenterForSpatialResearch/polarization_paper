@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>questions</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="../lib/d3.v5.min.js"></script>
+    <script src="../lib/colors.js"></script>
+<style>
+    @font-face{
+        font-family:stanhope;
+          src: url(StanhopeRR-Medium.otf);
+    }
+    body{
+        font-size:14px;
+        color:#000;
+        font-family:stanhope;
+    }
+    #intro{
+        width:100%;
+        padding:10px;
+        position:fixed;
+        background-color:#fff;
+        top:0px;
+        border-bottom:1px solid black;
+    }
+    p{
+        width:90%;
+    }
+    #scroll{
+        height:100%;
+        overflow:auto;
+        max-width:800px;
+        float:top;
+        margin-top:130px;
+    }
+    .archival{
+        max-width:800px;
+    }
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f8c1d9; 
+    }
+ 
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #ee3d96;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #000; 
+    }
+</style>
+
+</head>
+<body>
+ 
+ <div id ="intro">
+     <p>Of the more than ninety questions that made up the survey, Merton and Lazarsfeld focused on only <span class="two" style="text-decoration:underline; color:#ee3d96">two</span> in their 1954 paper. Scroll to see all the questions that were asked in the survey but not used in the final work.</p>
+     
+ </div>
+
+<div id="scroll">
+  <!--
+    <img class ="archival" src="img/questions_1_24.jpg" width="100%">
+      <img class ="selected" src="img/questions_24_25_highlighted.jpg" width="100%">
+      <img class ="archival" src="img/questions_27_94.jpg" width="100%">-->
+  
+</div>
+ 
+
+<script type="text/javascript">
+
+        d3.select(".two").on('click',function(){
+            $('html,scroll').animate({
+                    scrollTop: $(".selected").offset().top -120 },
+                    'slow');
+        })
+</script>
+
+</body>
+</html>
