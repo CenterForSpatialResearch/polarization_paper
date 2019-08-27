@@ -4,7 +4,7 @@ var timelineUtil = {
     h:70,
     p:40,
     ml:60,
-    mt:640
+    mt:window.innerHeight-120
 }
 
 function drawTimeline(linksCount,threshold){

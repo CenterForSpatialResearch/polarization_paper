@@ -72,7 +72,8 @@ d3.select("#triadic")
 var downloadInterval = 500
     
 var svg = d3.select("#chart1").append("svg")
-    .attr("width",window.innerWidth)
+   // .attr("width",window.innerWidth)
+    .attr("width",800)
     .attr("height",window.innerHeight)
 var width = +svg.attr("width")
 var height = +svg.attr("height")
@@ -94,6 +95,7 @@ var interval = 5
 
 var nodes = []
 var links = []
+
 
 makeNetworkData(thresholdStart)
  

@@ -7,7 +7,7 @@
 //    .force("y", d3.forceY())
 //    .alphaTarget(1)
 //    .on("tick", ticked);
-    
+
 var simulation = d3.forceSimulation(nodes)
             .force("charge", d3.forceManyBody().strength(strength))
             .force("link", d3.forceLink(links).distance(distance))
@@ -17,14 +17,15 @@ var simulation = d3.forceSimulation(nodes)
             .on("tick", ticked);
 
     
-    var g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-    var link = g.append("g").attr("stroke", strokeColor).attr("stroke-width", strokeWidth).attr("class","link"+className).selectAll(".link"+className)
-    var node = g.append("g")
-        .attr("stroke", strokeColor).attr("stroke-width", strokeWidth).attr("stroke-opacity",.2)
-        .attr("class","node"+className).selectAll(".node"+className);
+var g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+var link = g.append("g").attr("stroke", strokeColor).attr("stroke-width", strokeWidth).attr("class","link"+className).selectAll(".link"+className)
+var node = g.append("g")
+    .attr("stroke", strokeColor).attr("stroke-width", strokeWidth).attr("stroke-opacity",.2)
+    .attr("class","node"+className).selectAll(".node"+className);
 
-        restart();
+    restart();
         
+    window.addEventListener("resize", restart());
 
    // restart();
     var sources
