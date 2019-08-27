@@ -154,4 +154,4 @@ function drawMask(linkLength){
 drawTimelineAxis()
 drawTimeline(100,threshold)
 
-addTimelineMarker(100)
+addTimelineMarker(0)

@@ -1,6 +1,10 @@
+@font-face{
+    font-family:stanhope;
+      src: url(StanhopeRR-Medium.otf);
+}
     body{
-        font-family:helvetica;
-        font-size:12px;
+        font-family:stanhope;
+        font-size:14px;
         letter-spacing:1px;
     }
     #setup{
@@ -42,7 +46,7 @@
         border-radius:5px;
     }
     .slidecontainer{
-        margin-left:40px;
+        margin-left:10px;
         display:inline-block;
         padding:10px;
     }
@@ -50,7 +54,7 @@
     .slider {
       -webkit-appearance: none;  /* Override default CSS styles */
       appearance: none;
-      width: 100px; /* Full-width */
+      width: 150px; /* Full-width */
       height: 25px; /* Specified height */
       background: #ffffff; /* Grey background */
       border:1px solid #000000;
@@ -60,26 +64,40 @@
       transition: opacity .2s;
     }
     .sliderLinksAdded{
-        width: 600px; /* Full-width */
+        width: 500px; /* Full-width */
         height: 25px; /* Specified height */
     }
     .slider::-webkit-slider-thumb {
       -webkit-appearance: none; /* Override default look */
       appearance: none;
-      width: 25px; /* Set a specific slider handle width */
-      height: 25px; /* Slider handle height */
-      background: #000000; /* Green background */
+      width: 40px; /* Set a specific slider handle width */
+      height: 20px; /* Slider handle height */
       cursor: pointer; /* Cursor on hover */
+      background: url('slider_m.png');
     }
 
     .slider::-moz-range-thumb {
-      width: 25px; /* Set a specific slider handle width */
-      height: 25px; /* Slider handle height */
-      background: #aaaaaa; /* Green background */
+      width: 40px; /* Set a specific slider handle width */
+      height: 10px; /* Slider handle height */
       cursor: pointer; /* Cursor on hover */
+      background: url('slider_m.png');
+    }
+    #growthValue{
+        color:#ec008c;
+        font-size:25px;
+        line-height:20%;
+        padding:5px;
+        vertical-align:super;
+    }
+    #linksAddedValue{
+        color:#ec008c;
+        font-size:25px;
+        line-height:20%;
+        padding:5px;
+        vertical-align:super;
     }
     #hideTolerance{
-        width:200px;
+        width:300px;
         height:70px;
         background-color:rgba(255,255,255,.7);
         position:absolute;
@@ -94,5 +112,10 @@
         padding:10px;
         width:200px;
         
+    }
+    #triadic{
+        border:1px solid black;
+        padding:5px;
+        width:180px;
     }
     
