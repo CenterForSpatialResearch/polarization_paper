@@ -22,33 +22,27 @@
     </style>
 </head>
 <body>
-    <div id="tooltip" ></div>
  <div id="control">
-      <div id="title">
-          <h2>Concordances</h2>
-          <!--
-          <p>Since 1949, the definition of homophily has evolved from a descriptive term coined to describe a situationally specific and unique observation, to a general concept with its own prescriptive set of methodologies that embeds it within many of the algorithms we use daily. The turn from homophily as observation to homophily as methodology can be seen in the progression of scientific and popular examples from the research and literature that utilize the term.</p>-->
+     <!-- <div id="title">
+          
+          <p>Since 1949, the definition of homophily has evolved from a descriptive term coined to describe a situationally specific and unique observation, to a general concept with its own prescriptive set of methodologies that embeds it within many of the algorithms we use daily. The turn from homophily as observation to homophily as methodology can be seen in the progression of scientific and popular examples from the research and literature that utilize the term.</p>
                     
                    <p> This visualization consists of a selection of 1777 paper abstracts taken from the Web of Science where homophily is a topic.</p>
           
-      </div>      
-       <div id="fields" class="select">Fields:<br/></div>
+      </div>   -->   
+       <div id="fields" class="select">Fields:</div>
+<!--
        <div id="keywords" class="select">Some Keywords from the Abstracts:<br/></div>
-       <div id="count">  
+-->
              <div id="countText"></div> 
                     
-           <div id="barchart"></div>
-       </div>
-       
-       
+           <div id="barchart"></div>       
    </div>
-   
-  
+  <div id="yearBanner">YEAR</div>
     <div id="chart1">
     </div>
-   
-
-
+<input type="text" value="null" id="myInput">
+    <div id="tooltip" ></div>
 
 <script>
     
@@ -65,14 +59,13 @@
     var maxAtLine = 0
     var lengthLimit = 1000
 
-
     var buttonHighlightColor= cyan
     var buttonHighlightColor2= magenta
     var concordanceHighlightColor = magenta
     var barHighlightColor = orange
     var wordHighlightColor = orange
     
-            document.title = field.split("_").join(" ")+" "+keyWord
+    document.title = field.split("_").join(" ")+" "+keyWord
     
     var promises = []
     for(var f in fields){
@@ -93,16 +86,25 @@
         makeFieldButtons(data,keyWord,chartData)
         makeKeywordButtons(data,keyWord,chartData)
         d3.select(".computer_science").style("color",buttonHighlightColor).style("border","1px solid "+buttonHighlightColor)
-        
+        resize()
         //drawSvgText(formatted)
+           getCurrentYear()
+       $(window).scroll(function(){
+           getCurrentYear()
+       })//.addEventListener("scroll", getCurrentYear);
     })
     
-
+    function offset(el) {
+        var rect = el.getBoundingClientRect(),
+        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
+    }
 function drawBarChart(field, data){
     d3.selectAll("#barchart svg").remove()
     field = field.split("_").join(" ")
     var w = 400
-    var h = 100
+    var h = 80
     var bw = 8
     var p = 20
     var svg = d3.select("#barchart").append("svg").attr("width",w).attr("height",h+p)
@@ -208,7 +210,7 @@ function makeFieldButtons(data,splitBy,countData) {
             var currentData = data[fields.indexOf(currentField)]
             var formattedData = formatData(currentData,keyWord)
             drawText(formattedData,keyWord,currentField)
-            drawBarChart(field, countData)
+            drawBarChart(currentField, countData)
             document.title = currentField.split("_").join(" ")+" "+keyWord
         })
     }
@@ -242,6 +244,30 @@ function drawSvgText(data){
         }
     }
     downloadSVG()
+}
+function getCurrentYear(){
+    var startOffset = offset(document.querySelector("#chart1")).top
+    var windowOffset = $(window).scrollTop()+startOffset
+    
+    var yearOffsets = []
+    for(var year = 1950; year<2020; year++){
+        if(d3.select("#yearDivider_"+year).size()>0){
+            //var offset = document.getElementById("yearDivider_"+year)
+            //console.log(offset)
+            var div = document.querySelector("#yearDivider_"+year);
+            var divOffset = offset(div).top;
+           yearOffsets.push({year:year,offset:divOffset})
+        }
+        
+    }
+    for(var y in yearOffsets){
+        if(windowOffset<yearOffsets[y].offset){
+            
+            d3.select("#yearBanner").html(yearOffsets[y-1].year)
+            break
+        }
+    }    
+    
 }
 function formatData(data,splitBy){
     var split = []
@@ -286,7 +312,7 @@ function drawText(data,splitBy,field){
     d3.selectAll(".row").remove()
     d3.selectAll(".year").remove()
     
-    d3.select("#countText").html("There are <strong>"+data.length+"</strong> instances of <strong>"+splitBy+"</strong> in paper abstracts from <strong>"+field.replace("_"," ")+"</strong>.")
+    d3.select("#countText").html("<br>There are <strong>"+data.length+"</strong> instances of <strong>"+splitBy+"</strong> in paper abstracts from <strong>"+field.replace("_"," ")+"</strong>.")
    // var splitBy = "homophily"
     var topMarginIndex = 0
     var topMargin = 0
@@ -309,22 +335,22 @@ function drawText(data,splitBy,field){
                 
                 if(i>0){
                     if(data[i][1].year!=data[i-1][1].year){
-                        d3.select("#chart1").append("div").attr("id","year_divider").html(data[i][1].year)
+                        d3.select("#chart1").append("div").attr("id","yearDivider_"+data[i][1].year).html(data[i][1].year)
                         .style("border-top","1px dotted "+barHighlightColor)
                         .style("color",barHighlightColor)
-                        .style("font-size","20px")
+                        .style("font-size","24px")
                         .style("width","100%")
-                        .style("height","12px")
+                        .style("height","24px")
                         .style("text-align","right")
                         .attr("class","year year_"+data[i][1].year)
                     }
                 }else if(i==0){
-                        d3.select("#chart1").append("div").attr("id","year_divider").html(data[0][1].year)
+                        d3.select("#chart1").append("div").attr("id","yearDivider_"+data[i][1].year).html(data[0][1].year)
                         .style("border-top","1px dotted "+barHighlightColor)
                         .style("color",barHighlightColor)
-                        .style("font-size","20px")
+                        .style("font-size","24px")
                         .style("width","100%")
-                        .style("height","12px")
+                        .style("height","24px")
                         .style("text-align","right")
                         .attr("class","year year_"+data[i][1].year)
                 }
@@ -337,18 +363,22 @@ function drawText(data,splitBy,field){
                 .on("mouseover",function(){
                     d3.selectAll(".row").style("color","black")
                     d3.select(this).style("color",concordanceHighlightColor)
-					var xPosition = parseFloat(d3.select(this).attr("x"))
-					var yPosition = parseFloat(d3.select(this).attr("y"))
+					var xPosition = d3.event.pageX
+					var yPosition = d3.event.pageY
+                    var xPosition = d3.event.pageX
+					var yPosition = d3.event.pageY
+                    
 					d3.select("#tooltip")
 						.style("left", xPosition + "px")
-						.style("top", yPosition + "px")						
-						.select("#value")
+						.style("top", yPosition + "px")		
+						//.select("#value")
                     
                      d3.select("#tooltip")
                     .html(
                         d3.select(this).attr("title")+"<br>"
                         +d3.select(this).attr("author")+"<br>"
-                        +d3.select(this).attr("year")
+                        +d3.select(this).attr("year")+"<br>"
+                        +"<span style=\"color:black\">click to copy</span>"
                     )
                     .style("color",concordanceHighlightColor)
                     .style("visibility","visible")
@@ -356,6 +386,12 @@ function drawText(data,splitBy,field){
                 .on("mouseout",function(){
 					d3.select("#tooltip").style("visibility","hidden")
                     d3.selectAll(".row").style("color","black")
+                })
+                .on("click",function(){
+                    var text = d3.select(this).attr("title")+" "+d3.select(this).attr("author")+" "+d3.select(this).attr("year")
+                    var toCopy = d3.select("#myInput").attr("value",text)
+                    document.getElementById("myInput").select(); 
+                    document.execCommand("copy");
                 })
                 
                 
@@ -389,6 +425,16 @@ function drawText(data,splitBy,field){
             }
     }
 }
+
+function resize(){
+   var topHeight = parseInt(d3.select("#control").style("height").replace("px",""))+13+"px"
+   var topHeightYear = parseInt(d3.select("#control").style("height").replace("px",""))+22+"px"
+    d3.select("#yearBanner").style("margin-top",topHeightYear)
+    d3.select("#chart1").style("margin-top",topHeight)
+}
+window.addEventListener("resize", resize);
+
+
 </script>
 </body>
 </html>

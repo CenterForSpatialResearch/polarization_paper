@@ -41,6 +41,7 @@ body{
     width:99%;
     overflow:hidden;
     margin-top:20px;
+    z-index:-1;
 }
 #control{
     border:1px solid #aaa;
@@ -50,24 +51,37 @@ body{
     top:0px;
     left:0px;
     z-index:999;
-    width:440px;
+    width:100%;
     display:inline-block;
 }
-#count{
-    font-size:14px;
-    border:1px solid #aaa;
-    padding:10px;
-    margin:5px;
-    width:400px;
-    display:inline-block;
+#yearBanner{
+    position:fixed;
+    top:0px;
+    background-color:#fff;
+    height:50;
+    width:99%;
+    border-top:1px dotted orange;
+    text-align:right;
+    color:orange;
+    font-size:24px;
 }
 #title{
-    padding:10px;
+    width:20%;
     margin:5px;
     display:inline-block;
+    vertical-align:top;
+    min-width:100px;
 }
 #fields{
+    width:25%;
     display:inline-block;
+    vertical-align:top;
+    min-width:100px;
+}
+#keywords{
+    width:15%;
+    display:inline-block;
+    vertical-align:top;
 }
 .keyword{
     font-size:10px;
@@ -81,6 +95,12 @@ body{
 }
 #barchart{
     display:inline-block;
+    vertical-align:top;
+}
+#countText{
+    width:10%;
+    display:inline-block;
+    vertical-align:top;
 }
 .select{
     padding:10px;
@@ -90,17 +110,16 @@ body{
     font-size:10px;
     padding:5px;
     border:1px solid #aaa;
-    width:100px;
     margin:2px;
     border-radius:3px;
     display:inline-block;
     text-align:center;
 }
 #tooltip {
-	position: fixed;
+	position: absolute;
     bottom:10px;
 	width: 200px;
-	height: auto;
+    height:200px;
 	padding: 10px;
 	background-color: white;
 	border:1px dotted #aaa;
