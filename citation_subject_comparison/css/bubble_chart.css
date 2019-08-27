@@ -1,3 +1,11 @@
+@font-face{
+    font-family:stanhope;
+      src: url(StanhopeRR-Medium.otf);
+}
+    body{
+        font-family:stanhope;
+        font-size:14px;
+    }
 a, a:visited, a:active {
   color: #444;
 }

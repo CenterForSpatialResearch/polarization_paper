@@ -22,7 +22,7 @@ function bubbleChart() {
   var yearCenters = {}
   var yearsTitleX ={}
   
-  var startYear = 1959
+  var startYear = 1962
   var endYear = 2020
   var padding = 200
   for(var py = startYear; py<endYear; py++){
@@ -44,7 +44,7 @@ function bubbleChart() {
  //  2010: width - 160
  //};
   // @v4 strength to apply to the position forces
-  var forceStrength = 0.02;
+  var forceStrength = 0.08;
 
   // These will be set in create_nodes and create_vis
   var svg = null;
@@ -66,7 +66,7 @@ function bubbleChart() {
   // @v4 Before the charge was a stand-alone attribute
   //  of the force layout. Now we can use it as a separate force!
   function charge(d) {
-    return -Math.pow(d.radius, 2.2) * forceStrength;
+    return -Math.pow(d.radius, 2.0) * forceStrength;
   }
 
   // Here we create a force layout and
@@ -188,6 +188,10 @@ function bubbleChart() {
           }
           return fillColor(d.group); 
       })
+      .attr("class",function(d){
+          return "bubble year_"+d.year+" cGroup_"+Math.floor(d.value/100)
+      })
+      
       .attr('stroke', function (d) { 
           if(d.value == ""||d.value==0){
               return  fillColor(d.group)
@@ -197,7 +201,8 @@ function bubbleChart() {
       .attr('stroke-width', 1)
       .on('mouseover', showDetail)
       .on('mouseout', hideDetail);
-
+     
+      
     // @v4 Merge the original empty selection and the enter selection
     bubbles = bubbles.merge(bubblesE);
 
@@ -205,7 +210,7 @@ function bubbleChart() {
     // correct radius
     bubbles.transition()
       .duration(2000)
-      .attr('r', function (d) { return d.radius; });
+      .attr('r', function (d) { return d.radius; })
 
     // Set the simulation's nodes to our newly created nodes array.
     // @v4 Once we set the nodes, the simulation will start running automatically!
@@ -255,6 +260,7 @@ function bubbleChart() {
    */
   function groupBubbles() {
     hideYearTitles();
+      d3.selectAll(".gridYears").remove()
 
     // @v4 Reset the 'x' force to draw the bubbles to the center.
     simulation.force('x', d3.forceX().strength(forceStrength).x(center.x));
@@ -271,13 +277,64 @@ function bubbleChart() {
    * yearCenter of their data's year.
    */
   function splitBubbles() {
-    showYearTitles();
-
+      d3.selectAll(".gridYears").remove()
+    //showYearTitles();
     // @v4 Reset the 'x' force to draw the bubbles to their year centers
     simulation.force('x', d3.forceX().strength(forceStrength).x(nodeYearPos));
 
     // @v4 We can reset the alpha value and restart the simulation
     simulation.alpha(1).restart();
+    
+    
+    
+    //showKeyYears()
+  }
+  function gridBubbles(){
+          simulation.stop()
+      var column = 0
+      for(var year = 1959; year<2020; year++ ) {
+          column+=1
+          
+          svg.append("text")
+          .text(year)
+          .attr("class","gridYears")
+          .attr("x",0)
+          .attr("y",column*12+6)
+          
+          d3.selectAll(".year_"+year)
+          .each(function(d,i){
+              d3.select(this)
+              .transition()
+              .duration(1000)
+              .delay(i*5)
+              .attr("cy",column*12)
+              .attr("cx",i*3+40)
+          })
+         
+      }
+  }
+  
+  function citationCount(){
+      d3.selectAll(".gridYears").remove()
+      
+          simulation.stop()
+      var spacing = 30
+      var groupOrder = 0
+      
+      for(var group=100; group>=0; group=group-1){
+          var gSize = d3.selectAll(".cGroup_"+group).size()
+          
+          if(gSize>0){
+              groupOrder+=1
+              d3.selectAll(".cGroup_"+group)
+              .each(function(d,i){
+                  d3.select(this)
+                  .transition()
+                  .attr("cx",i%50*10+100)
+                  .attr("cy",groupOrder*30+Math.floor(i/50)*10+100)
+              })
+          }
+      }
   }
 
   /*
@@ -299,15 +356,31 @@ function bubbleChart() {
 
     years.enter().append('text')
       .attr('class', 'year')
-      .attr('x', function (d,i) {console.log(yearsTitleX[d].x); return yearsTitleX[d].x; })
-      .attr('y', 80)
+      .attr('x', function (d,i) {return yearsTitleX[d].x; })
+      .attr('y', 400)
       .attr('text-anchor', 'middle')
-      .text(function (d) { return d; })
+      .text(function (d) {
+          if(d%10==0){
+              return d; 
+
+          }
+      })
       .style("font-size","10px")
-      .style("color","black")
+      .style("fill","black")
       .style("writing-mode","vertical-rl");
   }
-
+  function showKeyYears(){
+      d3.selectAll(".bubble")
+      .each(function(d){
+          if(d.value>200){
+          //    console.log(d)
+              svg.append("text")
+              .text(d.year)
+              .attr("x",d.x)
+              .attr("y",d.y)
+          }
+      })
+  }
 
   /*
    * Function called on mouseover to display the
@@ -357,8 +430,12 @@ function bubbleChart() {
   chart.toggleDisplay = function (displayName) {
     if (displayName === 'year') {
       splitBubbles();
-    } else {
+    } else if(displayName==="all") {
       groupBubbles();
+    }else if(displayName ==="grid"){
+        gridBubbles()
+    }else if(displayName =="citation"){
+        citationCount()
     }
   };
 
