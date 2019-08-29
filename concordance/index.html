@@ -4,7 +4,7 @@
      <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <title>concordance</title>
+    <title>concordances</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script type="text/javascript" src="../lib/d3.v5.min.js"></script>
     <script type="text/javascript" src="../lib/d3-tip.js"></script>
@@ -23,17 +23,8 @@
 </head>
 <body>
  <div id="control">
-     <!-- <div id="title">
-          
-          <p>Since 1949, the definition of homophily has evolved from a descriptive term coined to describe a situationally specific and unique observation, to a general concept with its own prescriptive set of methodologies that embeds it within many of the algorithms we use daily. The turn from homophily as observation to homophily as methodology can be seen in the progression of scientific and popular examples from the research and literature that utilize the term.</p>
-                    
-                   <p> This visualization consists of a selection of 1777 paper abstracts taken from the Web of Science where homophily is a topic.</p>
-          
-      </div>   -->   
-       <div id="fields" class="select">Fields:</div>
-<!--
-       <div id="keywords" class="select">Some Keywords from the Abstracts:<br/></div>
--->
+     <div id="title">Concordences</div>
+       <div id="fields" class="select"></div>
              <div id="countText"></div> 
                     
            <div id="barchart"></div>       
@@ -45,7 +36,10 @@
     <div id="tooltip" ></div>
 
 <script>
-    
+    var cyan = "#00aeef"
+    var yellow = "#fff200"
+    var magenta = "#ec008c"
+    var orange = "#f7941d"
     d3.select("#a").style("width","900px")
     
     var fields = ["computer_science","behavioral_sciences","psychology","sociology","social_sciences_other","business_economics"]
@@ -78,14 +72,14 @@
     .then(function(data){
         
         var chartData = data[data.length-1]
-        drawBarChart(field, chartData)
+       // drawBarChart(field, chartData)
         
         var formatted = formatData(data[0],keyWord)
      //   var formateByMaxAtLine = orderByMaxAtLine(formatted)
         drawText(formatted,keyWord,field)
         makeFieldButtons(data,keyWord,chartData)
         makeKeywordButtons(data,keyWord,chartData)
-        d3.select(".computer_science").style("color",buttonHighlightColor).style("border","1px solid "+buttonHighlightColor)
+        d3.select(".computer_science").style("color",buttonHighlightColor)//.style("border","1px solid "+buttonHighlightColor)
         resize()
         //drawSvgText(formatted)
            getCurrentYear()
@@ -175,15 +169,15 @@ function makeKeywordButtons(data,splitBy,countData){
             d3.select(this).style('background-color',"#ffffff")
         })
         .on("click",function(){
-            d3.selectAll(".keyword").style("color","#000000").style("border","1px solid #000000")
-            d3.select(this).style("color",buttonHighlightColor2).style("border","1px solid "+buttonHighlightColor2)
+            d3.selectAll(".keyword").style("color","#000000")//.style("border","1px solid #000000")
+            d3.select(this).style("color",buttonHighlightColor2)//.style("border","1px solid "+buttonHighlightColor2)
             var currentData = data[fields.indexOf(currentField)]
             var currentKeyword = d3.select(this).attr("keyword")
             keyWord = currentKeyword
             
             var formattedData = formatData(currentData,currentKeyword)
             drawText(formattedData,currentKeyword,currentField)
-            drawBarChart(field, countData)
+//            drawBarChart(field, countData)
             document.title = currentField.split("_").join(" ")+" "+keyWord
             
         })
@@ -204,13 +198,15 @@ function makeFieldButtons(data,splitBy,countData) {
             d3.select(this).style('background-color',"#ffffff")
         })
         .on("click",function(){
-            d3.selectAll(".field").style("color","#000000").style("border","1px solid #000000")
-            d3.select(this).style("color",buttonHighlightColor).style("border","1px solid "+buttonHighlightColor)
+            d3.selectAll(".field").style("color","#000000")//.style("border","1px solid #000000")
+            d3.select(this).style("color",buttonHighlightColor)//.style("border","1px solid "+buttonHighlightColor)
             currentField = d3.select(this).attr("field")
             var currentData = data[fields.indexOf(currentField)]
             var formattedData = formatData(currentData,keyWord)
             drawText(formattedData,keyWord,currentField)
-            drawBarChart(currentField, countData)
+            getCurrentYear()
+            
+           // drawBarChart(currentField, countData)
             document.title = currentField.split("_").join(" ")+" "+keyWord
         })
     }
@@ -312,7 +308,7 @@ function drawText(data,splitBy,field){
     d3.selectAll(".row").remove()
     d3.selectAll(".year").remove()
     
-    d3.select("#countText").html("<br>There are <strong>"+data.length+"</strong> instances of <strong>"+splitBy+"</strong> in paper abstracts from <strong>"+field.replace("_"," ")+"</strong>.")
+    d3.select("#countText").html("There are <strong>"+data.length+"</strong> instances of <strong>"+splitBy+"</strong> in paper abstracts from <strong>"+field.replace("_"," ")+"</strong>.")
    // var splitBy = "homophily"
     var topMarginIndex = 0
     var topMargin = 0
@@ -336,22 +332,26 @@ function drawText(data,splitBy,field){
                 if(i>0){
                     if(data[i][1].year!=data[i-1][1].year){
                         d3.select("#chart1").append("div").attr("id","yearDivider_"+data[i][1].year).html(data[i][1].year)
-                        .style("border-top","1px dotted "+barHighlightColor)
-                        .style("color",barHighlightColor)
-                        .style("font-size","24px")
+                     //   .style("border-top","1px dotted "+barHighlightColor)
+                        .style("color","rgba(236, 0, 140,.2)")
+                        .style("font-size","48px")
                         .style("width","100%")
-                        .style("height","24px")
-                        .style("text-align","right")
+                        .style("padding","10px")
+                        .style("height","0px")
+                        .style("padding-bottom","-30px")
+                        .style("text-align","left")
                         .attr("class","year year_"+data[i][1].year)
                     }
                 }else if(i==0){
                         d3.select("#chart1").append("div").attr("id","yearDivider_"+data[i][1].year).html(data[0][1].year)
-                        .style("border-top","1px dotted "+barHighlightColor)
-                        .style("color",barHighlightColor)
-                        .style("font-size","24px")
+                        //.style("border-top","1px dotted "+barHighlightColor)
+                        .style("color","rgba(	236, 0, 140,.2)")
+                        .style("font-size","48px")
                         .style("width","100%")
-                        .style("height","24px")
-                        .style("text-align","right")
+                        .style("height","0px")
+                        .style("padding","10px")
+                        .style("padding-bottom","-30px")
+                        .style("text-align","left")
                         .attr("class","year year_"+data[i][1].year)
                 }
                 
@@ -362,7 +362,8 @@ function drawText(data,splitBy,field){
                 .attr("year",data[i][1].year)
                 .on("mouseover",function(){
                     d3.selectAll(".row").style("color","black")
-                    d3.select(this).style("color",concordanceHighlightColor)
+                    d3.select(this)
+                    .style("color",concordanceHighlightColor)
 					var xPosition = d3.event.pageX
 					var yPosition = d3.event.pageY
                     var xPosition = d3.event.pageX
@@ -384,7 +385,8 @@ function drawText(data,splitBy,field){
                     .style("visibility","visible")
                 })
                 .on("mouseout",function(){
-					d3.select("#tooltip").style("visibility","hidden")
+					d3.select("#tooltip").html("")
+                    d3.select("#tooltip").style("visibility","hidden")
                     d3.selectAll(".row").style("color","black")
                 })
                 .on("click",function(){
@@ -427,8 +429,8 @@ function drawText(data,splitBy,field){
 }
 
 function resize(){
-   var topHeight = parseInt(d3.select("#control").style("height").replace("px",""))+13+"px"
-   var topHeightYear = parseInt(d3.select("#control").style("height").replace("px",""))+22+"px"
+   var topHeight = parseInt(d3.select("#control").style("height").replace("px",""))+2+"px"
+   var topHeightYear = parseInt(d3.select("#control").style("height").replace("px",""))+20+"px"
     d3.select("#yearBanner").style("margin-top",topHeightYear)
     d3.select("#chart1").style("margin-top",topHeight)
 }
