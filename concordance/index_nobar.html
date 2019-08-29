@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>concordances</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script type="text/javascript" src="../lib/d3.v5.min.js"></script>
+    <script type="text/javascript" src="../lib/d3-tip.js"></script>
+    <script type="text/javascript" src="../lib/jquery.js"></script>
+    <script type="text/javascript" src="../lib/colors.js"></script>
+<!--
+    <script type="text/javascript" src="downloadSVG.js"></script>
+-->
+  <link rel="stylesheet" type="text/css" href="concordance.css">
+  
+    
+    <style>
+       
+        
+    </style>
+</head>
+<body>
+ <div id="control">
+     <div id="title">Concordences</div>
+       <div id="fields" class="select"></div>
+             <div id="countText"></div> 
+                    
+           <div id="barchart"></div>       
+   </div>
+  <div id="yearBanner">YEAR</div>
+    <div id="chart1">
+    </div>
+<input type="text" value="null" id="myInput">
+    <div id="tooltip" ></div>
+
+<script>
+    var cyan = "#00aeef"
+    var yellow = "#fff200"
+    var magenta = "#ec008c"
+    var orange = "#f7941d"
+    d3.select("#a").style("width","900px")
+    
+    var fields = ["computer_science","behavioral_sciences","psychology","sociology","social_sciences_other","business_economics"]
+    var keywords = [" homophily","social network"," predict"," model"," race"]
+    
+    var keyWord = "homophily"
+    var field = "computer_science"//"behavioral_sciences" "psychology"
+    var currentField = "computer_science"//"behavioral_sciences" "psychology"
+    var maxFontSize = 14
+    var minFontSize = 14
+    var maxAtLine = 0
+    var lengthLimit = 1000
+
+    var buttonHighlightColor= cyan
+    var buttonHighlightColor2= magenta
+    var concordanceHighlightColor = magenta
+    var barHighlightColor = orange
+    var wordHighlightColor = orange
+    
+    document.title = field.split("_").join(" ")+" "+keyWord
+    
+    var promises = []
+    for(var f in fields){
+        promises.push(d3.csv("data/citations by field - "+fields[f]+".csv"))
+    }
+    promises.push(d3.csv("data/homophily_year_field_count_top6.csv"))
+    
+    //Promise.all([d3.csv("data/citations by field - "+field+".csv")])
+    Promise.all(promises)
+    .then(function(data){
+        
+        var chartData = data[data.length-1]
+       // drawBarChart(field, chartData)
+        
+        var formatted = formatData(data[0],keyWord)
+     //   var formateByMaxAtLine = orderByMaxAtLine(formatted)
+        drawText(formatted,keyWord,field)
+        makeFieldButtons(data,keyWord,chartData)
+        makeKeywordButtons(data,keyWord,chartData)
+        d3.select(".computer_science").style("color",buttonHighlightColor)//.style("border","1px solid "+buttonHighlightColor)
+        resize()
+        //drawSvgText(formatted)
+           getCurrentYear()
+       $(window).scroll(function(){
+           getCurrentYear()
+       })//.addEventListener("scroll", getCurrentYear);
+    })
+    
+    function offset(el) {
+        var rect = el.getBoundingClientRect(),
+        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
+    }
+function drawBarChart(field, data){
+    d3.selectAll("#barchart svg").remove()
+    field = field.split("_").join(" ")
+    var w = 400
+    var h = 80
+    var bw = 8
+    var p = 20
+    var svg = d3.select("#barchart").append("svg").attr("width",w).attr("height",h+p)
+    var yearDomain = [data[data.length-1].year,2020]
+    var paperDomain = [1,100]
+    
+
+    
+    var xScale = d3.scaleLinear().domain(yearDomain).range([p,w-p])
+    var yScale = d3.scaleLinear().domain(paperDomain).range([1,h-p*2])
+    var yRScale = d3.scaleLinear().domain(paperDomain).range([h-p,0])
+        
+   var xAxis = d3.axisBottom().scale(xScale)
+            .tickSize(10)
+            .ticks(6)
+        .tickFormat(d3.format("d"));
+    var  yAxis = d3.axisLeft().scale(yRScale)
+            .tickSize(w-p*2)
+            .ticks(5)
+    
+    svg.append("g")
+            .attr("class", "xAxis")
+            .call(xAxis)
+            .attr("transform","translate("+0+", "+(h)+")")
+    
+    svg.append("g")
+    
+        .attr("class", "yAxisLong")
+        .call(yAxis)
+        .attr("transform","translate("+(w-p)+", "+p+")")
+        .style("stroke-dasharray","1 4")
+    
+    svg.selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("width",bw-2)
+    .attr("height",function(d,i){
+        return d[field]
+    })
+    .attr("x",function(d,i){
+        return xScale(d.year)
+    })
+    .attr("y",function(d,i){
+        return h-d[field]
+    })
+    .attr('fill',barHighlightColor)
+    .on("click",function(d){
+        d3.selectAll("rect").attr('fill',barHighlightColor)
+        d3.select(this).attr("fill","black")
+        if(d3.select(".year_"+d.year)["_groups"][0][0]!=null){
+            
+            $('html,body').animate({
+                    scrollTop: $(".year_"+d.year).offset().top },
+                    'slow');
+            }
+        })
+ 
+}
+function makeKeywordButtons(data,splitBy,countData){
+    for(var i in keywords){
+        var keyword = keywords[i]
+        d3.select("#keywords").append("div").attr("class","keyword").attr("keyword",keyword).html(keyword)
+        .on("mouseover",function(){
+            d3.select(this).style('background-color',yellow)
+        })
+        .on("mouseout",function(){
+            d3.select(this).style('background-color',"#ffffff")
+        })
+        .on("click",function(){
+            d3.selectAll(".keyword").style("color","#000000")//.style("border","1px solid #000000")
+            d3.select(this).style("color",buttonHighlightColor2)//.style("border","1px solid "+buttonHighlightColor2)
+            var currentData = data[fields.indexOf(currentField)]
+            var currentKeyword = d3.select(this).attr("keyword")
+            keyWord = currentKeyword
+            
+            var formattedData = formatData(currentData,currentKeyword)
+            drawText(formattedData,currentKeyword,currentField)
+//            drawBarChart(field, countData)
+            document.title = currentField.split("_").join(" ")+" "+keyWord
+            
+        })
+    }
+}    
+function makeFieldButtons(data,splitBy,countData) {
+    
+    for(var i in fields){
+        var field = fields[i]
+        d3.select("#fields").append("div").attr("class","fieldButton").html(field.split("_").join(" "))
+        .attr("class","field "+field)
+        .style("cursor","pointer")
+        .attr("field",field)
+        .on("mouseover",function(){
+            d3.select(this).style('background-color',yellow)
+        })
+        .on("mouseout",function(){
+            d3.select(this).style('background-color',"#ffffff")
+        })
+        .on("click",function(){
+            d3.selectAll(".field").style("color","#000000")//.style("border","1px solid #000000")
+            d3.select(this).style("color",buttonHighlightColor)//.style("border","1px solid "+buttonHighlightColor)
+            currentField = d3.select(this).attr("field")
+            var currentData = data[fields.indexOf(currentField)]
+            var formattedData = formatData(currentData,keyWord)
+            drawText(formattedData,keyWord,currentField)
+            getCurrentYear()
+            
+           // drawBarChart(currentField, countData)
+            document.title = currentField.split("_").join(" ")+" "+keyWord
+        })
+    }
+}   
+function drawSvgText(data){
+    console.log(data.length)
+    var fontWidth = 2
+    var fontHeight = 15
+    var padding = 30
+    var h = 20000
+    var w = window.innerWidth
+    var svg = d3.select("#chart1").append("svg").attr("height",h).attr("width",w)
+    
+    var topMarginIndex = 0
+    for(var i in data){
+        var absList = data[i].split(splitBy)
+        if(absList.length>1){
+            svg.append("text").text(absList[0]).attr("x",0).attr("y",i*fontHeight).attr("text-anchor","end")
+                .attr("transform","translate("+w/2+","+padding+")")
+        
+            svg.append("text").text(splitBy).attr("x",0).attr("y",i*fontHeight)
+                .attr("transform","translate("+(w/2+fontWidth)+","+padding+")").attr("text-anchor","start")
+
+            var ending = absList[1]+"."
+            if(ending[0]!="\'" && ending[0]!=","&& ending[0]!="."&& ending[0]!="-"&& ending[0]!=")"&& ending[0]!="\""){
+                ending = "\u00A0"+ending
+            }
+
+            svg.append("text").text(ending).attr("x",0).attr("y",i*fontHeight).attr("text-anchor","start")
+                .attr("transform","translate("+(w/2+(splitBy.length+15)*fontWidth)+","+padding+")")
+        }
+    }
+    downloadSVG()
+}
+function getCurrentYear(){
+    var startOffset = offset(document.querySelector("#chart1")).top
+    var windowOffset = $(window).scrollTop()+startOffset
+    
+    var yearOffsets = []
+    for(var year = 1950; year<2020; year++){
+        if(d3.select("#yearDivider_"+year).size()>0){
+            //var offset = document.getElementById("yearDivider_"+year)
+            //console.log(offset)
+            var div = document.querySelector("#yearDivider_"+year);
+            var divOffset = offset(div).top;
+           yearOffsets.push({year:year,offset:divOffset})
+        }
+        
+    }
+    for(var y in yearOffsets){
+        if(windowOffset<yearOffsets[y].offset){
+            
+            d3.select("#yearBanner").html(yearOffsets[y-1].year)
+            break
+        }
+    }    
+    
+}
+function formatData(data,splitBy){
+    var split = []
+    for(var i in data){
+        var author = data[i].Author
+        var title = data[i].Title
+        var year = data[i].Year
+        
+        if(data[i].Abs!=undefined){
+            var abs = data[i].Abs
+            var absList = abs.split(". ")
+            for(var j in absList){
+                if(absList[j].split(splitBy).length>1&& year!=""){
+                    split.push([absList[j],{author:author,title:title,year:year}])
+                }
+            }
+        }
+    }
+    //gtgconsole.log(split)
+    //split.sort(function(a,b){return a[0].length-b[0].length})
+    split.sort(function(a,b){return a[1].year-b[1].year})
+    return split
+}
+function orderByMaxAtLine(list){
+  //  list.sort(function(a,b){return b.length-a.length})
+    var newList = []
+    var maxAtLineCounter = maxAtLine
+    
+    for(var i in list){
+            if(i%(Math.round(list.length/maxAtLine))!=0){
+                newList.push(list[i])
+            }else{
+                newList.unshift(list[i])
+            }
+       
+    }
+    return newList
+}
+
+function drawText(data,splitBy,field){
+    
+    d3.selectAll(".row").remove()
+    d3.selectAll(".year").remove()
+    
+    d3.select("#countText").html("There are <strong>"+data.length+"</strong> instances of <strong>"+splitBy+"</strong> in paper abstracts from <strong>"+field.replace("_"," ")+"</strong>.")
+   // var splitBy = "homophily"
+    var topMarginIndex = 0
+    var topMargin = 0
+    var fontSizeScaleTop = d3.scaleLinear().domain([0,maxAtLine]).range([maxFontSize,minFontSize])
+    var fontSizeScaleBottom = d3.scaleLinear().domain([0,data.length-maxAtLine]).range([maxFontSize,minFontSize])
+    
+   // var fontSizeScaleVertical = d3.scaleLinear().domain([maxFontSize,minFontSize]).range([maxFontSize,minFontSize])
+    
+    for(var i in data){
+            var absList = data[i][0].split(splitBy)
+            
+            if(absList.length>1 && absList[0].length<lengthLimit && absList[1].length<lengthLimit){
+                topMarginIndex+=1
+                
+                if(i<=maxAtLine){
+                    topMargin += fontSizeScaleTop(Math.abs(i-maxAtLine))
+                }else{
+                    topMargin += fontSizeScaleBottom(Math.abs(i-maxAtLine))
+                }
+                
+                if(i>0){
+                    if(data[i][1].year!=data[i-1][1].year){
+                        d3.select("#chart1").append("div").attr("id","yearDivider_"+data[i][1].year).html(data[i][1].year)
+                     //   .style("border-top","1px dotted "+barHighlightColor)
+                        .style("color","rgba(236, 0, 140,.2)")
+                        .style("font-size","48px")
+                        .style("width","100%")
+                        .style("padding","10px")
+                        .style("height","0px")
+                        .style("padding-bottom","-30px")
+                        .style("text-align","left")
+                        .attr("class","year year_"+data[i][1].year)
+                    }
+                }else if(i==0){
+                        d3.select("#chart1").append("div").attr("id","yearDivider_"+data[i][1].year).html(data[0][1].year)
+                        //.style("border-top","1px dotted "+barHighlightColor)
+                        .style("color","rgba(	236, 0, 140,.2)")
+                        .style("font-size","48px")
+                        .style("width","100%")
+                        .style("height","0px")
+                        .style("padding","10px")
+                        .style("padding-bottom","-30px")
+                        .style("text-align","left")
+                        .attr("class","year year_"+data[i][1].year)
+                }
+                
+                
+                var row = d3.select("#chart1").append("div").attr("id","index_"+i).attr("class","row")
+                .attr("author",data[i][1].author)
+                .attr("title",data[i][1].title)
+                .attr("year",data[i][1].year)
+                .on("mouseover",function(){
+                    d3.selectAll(".row").style("color","black")
+                    d3.select(this)
+                    .style("color",concordanceHighlightColor)
+					var xPosition = d3.event.pageX
+					var yPosition = d3.event.pageY
+                    var xPosition = d3.event.pageX
+					var yPosition = d3.event.pageY
+                    
+					d3.select("#tooltip")
+						.style("left", xPosition + "px")
+						.style("top", yPosition + "px")		
+						//.select("#value")
+                    
+                     d3.select("#tooltip")
+                    .html(
+                        d3.select(this).attr("title")+"<br>"
+                        +d3.select(this).attr("author")+"<br>"
+                        +d3.select(this).attr("year")+"<br>"
+                        +"<span style=\"color:black\">click to copy</span>"
+                    )
+                    .style("color",concordanceHighlightColor)
+                    .style("visibility","visible")
+                })
+                .on("mouseout",function(){
+					d3.select("#tooltip").html("")
+                    d3.select("#tooltip").style("visibility","hidden")
+                    d3.selectAll(".row").style("color","black")
+                })
+                .on("click",function(){
+                    var text = d3.select(this).attr("title")+" "+d3.select(this).attr("author")+" "+d3.select(this).attr("year")
+                    var toCopy = d3.select("#myInput").attr("value",text)
+                    document.getElementById("myInput").select(); 
+                    document.execCommand("copy");
+                })
+                
+                
+                
+                
+                
+                if(absList[0]==""){
+                    var ending = "<span style=\"color:"+wordHighlightColor+"\"><strong>&nbsp;"+splitBy+"</strong></span>"+absList[1]
+                }else{
+                    var ending = "<span style=\"color:"+wordHighlightColor+"\"><strong>&nbsp;"+splitBy+"</strong></span>"+absList[1]
+                }
+                
+                
+                if(absList[1][absList[1].length-1]!="."){
+                    ending =ending+"."
+                }
+                //if(ending[0]!="\'" && ending[0]!=","&& ending[0]!="."&& ending[0]!="-"&& ending[0]!=")"&& ending[0]!="\""){
+                //    ending = "&nbsp"+ending
+                //}
+                
+                
+                row.append("div")
+                .html(absList[0])
+                .attr("class","before before_"+i)//  
+            //    row.append("div").html("b").attr("class","center center_"+i)//.html(splitBy)
+                
+                row.append("div")//.html("c")
+                .html(ending)
+                .attr("class","after after_"+i)
+             
+            }
+    }
+}
+
+function resize(){
+   var topHeight = parseInt(d3.select("#control").style("height").replace("px",""))+2+"px"
+   var topHeightYear = parseInt(d3.select("#control").style("height").replace("px",""))+20+"px"
+    d3.select("#yearBanner").style("margin-top",topHeightYear)
+    d3.select("#chart1").style("margin-top",topHeight)
+}
+window.addEventListener("resize", resize);
+
+
+</script>
+</body>
+</html>

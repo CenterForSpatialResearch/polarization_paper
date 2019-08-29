@@ -4,9 +4,8 @@
 }
 
 body{
-    font-size:12px;
+    font-size:11px;
     font-family:stan;
-    line-height:150%;
 /*
     background-color:black;
     color:white;
@@ -44,8 +43,8 @@ body{
     z-index:-1;
 }
 #control{
-    border:1px solid #aaa;
-    padding:10px;
+    border-bottom:2px solid #000;
+    padding:5px;
     background-color:rgba(255,255,255,1);
     position:fixed;
     top:0px;
@@ -57,23 +56,26 @@ body{
 #yearBanner{
     position:fixed;
     top:0px;
-    background-color:#fff;
-    height:50;
-    width:99%;
-    border-top:1px dotted orange;
-    text-align:right;
-    color:orange;
-    font-size:24px;
+    margin:10px;
+    height:30px;
+    width:100%;
+    text-align:left;
+    color:#ec008c;
+    color:rgba(	236, 0, 140,.2);
+    font-size:48px;
 }
 #title{
-    width:20%;
-    margin:5px;
+    width:50%;
+    margin:0px;
+    padding:3px;
     display:inline-block;
     vertical-align:top;
     min-width:100px;
+    font-size:48px;
+    letter-spacing:1px;
 }
 #fields{
-    width:25%;
+    width:50%;
     display:inline-block;
     vertical-align:top;
     min-width:100px;
@@ -98,20 +100,17 @@ body{
     vertical-align:top;
 }
 #countText{
-    width:10%;
+    width:100%;
     display:inline-block;
     vertical-align:top;
-}
-.select{
-    padding:10px;
-    margin:5px;
+    color:#00aeef;
+    padding:5px;
 }
 .field{
-    font-size:10px;
+    font-size:11px;
     padding:5px;
-    border:1px solid #aaa;
-    margin:2px;
-    border-radius:3px;
+    padding-right:7px;
+    border-right:1px solid #aaa;
     display:inline-block;
     text-align:center;
 }
@@ -119,11 +118,12 @@ body{
 	position: absolute;
     bottom:10px;
 	width: 200px;
-    height:200px;
 	padding: 10px;
 	background-color: white;
 	border:1px dotted #aaa;
     border-radius:5px;
 	pointer-events: none;
     z-index:999;
+    min-height: 100px;
+    
 }
