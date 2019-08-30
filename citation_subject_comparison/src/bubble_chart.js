@@ -261,7 +261,6 @@ function bubbleChart() {
    */
   function groupBubbles() {
     hideYearTitles();
-      d3.selectAll(".gridYears").remove()
 
     // @v4 Reset the 'x' force to draw the bubbles to the center.
     simulation.force('x', d3.forceX().strength(forceStrength).x(center.x));
@@ -278,12 +277,11 @@ function bubbleChart() {
    * yearCenter of their data's year.
    */
   function splitBubbles() {
-      d3.selectAll(".gridYears").remove()
     //showYearTitles();
     // @v4 Reset the 'x' force to draw the bubbles to their year centers
     simulation.force('x', d3.forceX().strength(.5).x(nodeYearPos));
     console.log(forceStrength)
-
+showYearTitles() 
     // @v4 We can reset the alpha value and restart the simulation
     simulation.alpha(1).restart();
     
@@ -350,26 +348,45 @@ function bubbleChart() {
    * Shows Year title displays.
    */
   function showYearTitles() {
+      console.log("show")
     // Another way to do this would be to create
     // the year texts once and then just hide them.
-    var yearsData = d3.keys(yearsTitleX);
-    var years = svg.selectAll('.year')
-      .data(yearsData);
-
-    years.enter().append('text')
-      .attr('class', 'year')
-      .attr('x', function (d,i) {return yearsTitleX[d].x; })
-      .attr('y', 400)
-      .attr('text-anchor', 'middle')
-      .text(function (d) {
-          if(d%10==0){
-              return d; 
-
-          }
-      })
-      .style("font-size","10px")
-      .style("fill","black")
-      .style("writing-mode","vertical-rl");
+    //var yearsData = d3.keys(yearsTitleX);
+    var years = svg
+        .append("text")
+        .attr('class', 'year')
+        .text("1960")
+        .attr("x",20)
+        .attr("y",height/2)
+        .style("font-size","24px")
+        .style('fill',"#000")
+    
+svg.append("text")
+        .attr('class', 'year')
+        .text("2019")
+        .attr("x",width-50)
+        .attr("y",height/2)
+        .style("font-size","24px")
+        .style('fill',"#000")
+    //.style("writing-mode","vertical-rl");
+        
+        
+//        .data(yearsData);
+//
+//        years.enter().append('text')
+//        .attr('class', 'year')
+//        .attr('x', function (d,i) {return yearsTitleX[d].x; })
+//        .attr('y', 400)
+//        .attr('text-anchor', 'middle')
+//        .text(function (d) {
+//        if(d%10==0){
+//          return d; 
+//
+//        }
+//        })
+//        .style("font-size","10px")
+//        .style("fill","black")
+//        .style("writing-mode","vertical-rl");
   }
   function showKeyYears(){
       d3.selectAll(".bubble")
