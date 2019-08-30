@@ -94,6 +94,12 @@
 <script type="text/javascript">
     
         var topHeight = parseInt(d3.select("#intro").style("height").replace("px",""))+40
+    
+    window.addEventListener("resize", function(){
+        topHeight = parseInt(d3.select("#intro").style("height").replace("px",""))+40
+        console.log(topHeight)
+    });
+    
         d3.select("#scroll").style("margin-top",topHeight+"px")
         d3.select(".two")
             .style("cursor","pointer")
