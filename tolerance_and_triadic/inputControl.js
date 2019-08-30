@@ -41,7 +41,7 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
       
       if(sliderDiv=="growthInput"){
           threshold = sliderValue/100
-          addTimelineMarker(links.length)          
+        //  addTimelineMarker(links.length)          
           //timelineRecorder.push([threshold,links.length])
       }
       
@@ -68,7 +68,7 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
               }else{
                     addLink(sliderValue-links.length)
               }
-              drawTimeline(sliderValue,threshold)
+             // drawTimeline(sliderValue,threshold)
           }else{
               for(var i = 0; i<links.length-sliderValue;i++){
                   links.pop()
@@ -92,10 +92,10 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
           }
           
           restart()  
-          addTimelineMarker(links.length)
-          if(threshold != timelineRecorder[timelineRecorder.length-1].threshold || links.length!=timelineRecorder[timelineRecorder.length-1].links){
-              timelineRecorder.push({threshold:threshold,links:links.length})
-          }
+         // addTimelineMarker(links.length)
+         // if(threshold != timelineRecorder[timelineRecorder.length-1].threshold || links.length!=timelineRecorder[timelineRecorder.length-1].links){
+         //     timelineRecorder.push({threshold:threshold,links:links.length})
+         // }
           
       }
       
