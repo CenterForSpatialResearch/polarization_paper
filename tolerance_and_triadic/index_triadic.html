@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <title>closure</title>
+    <title>Triadic Closure</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script src="../lib/d3.v5.min.js"></script>
@@ -15,15 +15,14 @@
 </head>
 <body>
    <div id="all">
-       <div id="title">Triadic</div>
-       <div id ="info">Add links to see the network grows by adding links at each step between nodes that have the most neighbors in common .<br/>
+       <div id="title">Triadic Closure</div>
+       <div id ="info">
+           This network has 100 links added at a random tolerance of <span id="randomTolerance"></span>.<br>
+           Grow the network with triadic closure by adding links at each step between nodes that have the most neighbors in common.<br/>
+           
+           
           </div>
        
-      
-    <!--
-      <div id="triadicInfo">  <strong>*Triadic Closure:</strong> Triadic closure refers to the linking of a and c in a situation where a and b are linked and b and c are linked - those creating a ridgid triangle in the network. 
-              In our simulation, we combine the idea of having the most in common with triadic closure by prioritizing the formation of links between a node and its neighbor's neighbor with the most neighbors in common (whose linking would also automatically create a triadic closure)<br/>
-             <strong> NOTE:</strong> in order to create triadic closures between nodes in the network, you must already have linked nodes to build upon.</div>-->
     
    <div class="slidecontainer">
    
@@ -40,6 +39,8 @@
          <input type="range" min="1" max="100" value="10" class="slider" id="growthInput">
          <span id="growthValue">value</span>
        </div>
+       
+       <div id=>
    </div>
    
     <div id="chart1"></div>
@@ -80,7 +81,8 @@ var strength = -100
 var size = 50
 
 var thresholdStart =Math.random()//.8//var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
-console.log(thresholdStart)
+d3.select("#randomTolerance").html(thresholdStart.toFixed(2))
+
 var threshold =parseInt(document.getElementById("growthInput").value)/100;
     
 var groups = 2
