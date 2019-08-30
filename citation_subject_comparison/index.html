@@ -7,23 +7,30 @@
   <meta name="author" content="Jim Vallandingham">
 
   <meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
   <link rel="stylesheet" href="css/reset.css">
+-->
   <link rel="stylesheet" href="css/bubble_chart.css">
 </head>
 <body>
   <div class="container">
-    <h2>Original Homophily Paper Citations vs. Homophily as Paper Topic</h2>
-    <img src="key.png" width = "200px">
+    <div id="title">Papers citing Lazarsfeld and Merton <br>vs. <br>Papers with Homophily as Topic</div>
     
     <div id="toolbar">
       <a href="#" id="all" class="button active">All Papers</a>
       <a href="#" id="year" class="button">Timeline</a>
-      <a href="#" id="grid" class="button">Grid</a>
-      <a href="#" id="citation" class="button">Citation Count</a>
       <!--<a href="#" id="group" class="button">Papers By Group</a>-->
+        <div id="key">
+            <div class="keyColor" id="citingKey"></div> Citing Lazarsfeld and Merton |
+            <div class="keyColor" id="topicKey"></div> Homophily as Topic   |
+            <div class="keyColor" id="bothKey"></div> Both |
+            <div class="keyColor" id="maxKey"></div> 1000 Citations  |
+            <div class="keyColor" id="minKey"></div> 1 Citation |
+            <div class="keyColor" id="emptyKey"></div> Papers with no citations |
+        </div>
     </div>
     <div id="vis"></div>
-
+  
    
   </div>
 

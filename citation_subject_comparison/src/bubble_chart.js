@@ -9,14 +9,15 @@
 function bubbleChart() {
   // Constants for sizing
   var width = 1000;
-  var height = 800;
+  var height = 600;
 
   // tooltip for mouseover functionality
   var tooltip = floatingTooltip('gates_tooltip', 240);
 
   // Locations to move bubbles towards, depending
   // on which view mode is selected.
-  var center = { x: width / 2, y: height / 2 };
+ // var center = { x: width / 2, y: height / 2 };
+  var center = { x: width / 3, y: height / 2 };
 
 
   var yearCenters = {}
@@ -26,7 +27,7 @@ function bubbleChart() {
   var endYear = 2020
   var padding = 200
   for(var py = startYear; py<endYear; py++){
-      yearCenters[py]={x:Math.round((width-padding/2)/(endYear-startYear+2)*(py-startYear+1)),y:height/2}
+      yearCenters[py]={x:Math.round((width-padding)/(endYear-startYear+4)*(py-startYear+1)+padding/3),y:height/2}
       yearsTitleX[py]={x:Math.round((width)/(endYear-startYear)*(py-startYear))+10}
   }
   //var yearCenters = {
@@ -44,7 +45,7 @@ function bubbleChart() {
  //  2010: width - 160
  //};
   // @v4 strength to apply to the position forces
-  var forceStrength = 0.08;
+  var forceStrength = 0.3;
 
   // These will be set in create_nodes and create_vis
   var svg = null;
@@ -66,7 +67,7 @@ function bubbleChart() {
   // @v4 Before the charge was a stand-alone attribute
   //  of the force layout. Now we can use it as a separate force!
   function charge(d) {
-    return -Math.pow(d.radius, 2.0) * forceStrength;
+    return -Math.pow(d.radius, 2.1) * forceStrength;
   }
 
   // Here we create a force layout and
@@ -87,7 +88,7 @@ function bubbleChart() {
   // @v4 scales now have a flattened naming scheme
   var fillColor = d3.scaleOrdinal()
     .domain(['common', 'citing', 'subject'])
-    .range(["#79db55", "#e6b237", "#72b7d3"]);
+    .range(["#fff200", "#ec008c", "#00aeef"]);
 
 
   /*
@@ -111,7 +112,7 @@ function bubbleChart() {
     // @v4: new flattened scale names.
     var radiusScale = d3.scalePow()
       .exponent(0.6)
-      .range([2, 40])
+      .range([4, 50])
       .domain([1, maxAmount]);
 
     // Use map() to convert raw data into node data.
@@ -280,7 +281,8 @@ function bubbleChart() {
       d3.selectAll(".gridYears").remove()
     //showYearTitles();
     // @v4 Reset the 'x' force to draw the bubbles to their year centers
-    simulation.force('x', d3.forceX().strength(forceStrength).x(nodeYearPos));
+    simulation.force('x', d3.forceX().strength(.5).x(nodeYearPos));
+    console.log(forceStrength)
 
     // @v4 We can reset the alpha value and restart the simulation
     simulation.alpha(1).restart();
