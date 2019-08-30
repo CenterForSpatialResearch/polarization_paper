@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>citation timeline</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet"> 
+    <script type="text/javascript" src="d3.v4.min.js"></script>
+<!--
+    <script type="text/javascript" src="d3-tip.js"></script>
+-->
+  
+    
+    <style>
+        .d3-tip{
+            background-color:rgba(255,255,255,.6);
+            padding:10px;
+            font-family:helvetica;
+            font-size:10px;
+            
+        }
+        .yAxisLong{
+            stroke-dasharray: 1 3; 
+        }
+    </style>
+</head>
+<body>
+   
+    <div id="chart1">
+    </div>
+   
+   <div id="smallCharts"></div>
+
+
+
+<script>
+    d3.csv("citation totals by year - Sheet1.csv",function(dataset){
+        console.log(dataset)
+        //steamgraph(dataset)
+        var fields = Object.keys(dataset[0])
+        
+        for(var f in fields){
+            var field = fields[f]
+            console.log(field)
+            if(field!="year"&&field!="other"){
+                drawBar(field, dataset)
+            }
+        }
+    })    
+    function drawBar(field, data){
+        var w = 800
+        var h = 300
+        var p = 40
+        var yearDomain = [1960,2020]
+        var paperDomain = [0,100]
+        var bw = w/(yearDomain[1]-yearDomain[0])-3
+        if(field=="total"){
+            h = h*2.4
+            paperDomain = [0,240]
+        }
+        
+        var xScale = d3.scaleLinear().domain(yearDomain).range([p,w-p])
+        var yScale = d3.scaleLinear().domain(paperDomain).range([0,h-p*2])
+        var yRScale = d3.scaleLinear().domain(paperDomain).range([h-p*2,0])
+        
+        var svg = d3.select("#smallCharts").append("svg").attr("width",w).attr("height",h).attr("class",field.split(" ").join("_")+"svg")
+        
+        
+        
+        yAxis = d3.axisLeft().scale(yRScale)
+            .tickSize(10)
+        
+        yAxisLong = d3.axisLeft().scale(yRScale)
+            .tickSize(w)
+        
+        xAxis = d3.axisBottom().scale(xScale)
+            .tickSize(10)
+            .ticks(6)
+    .tickFormat(d3.format("d"))
+      //  d3.select("."+field.split(" ").join("_")+"svg").append("g")
+      //      .attr("class", "yAxis")
+      //      .call(yAxis)
+      //      .attr("transform","translate("+p+", "+p+")")
+        
+        d3.select("."+field.split(" ").join("_")+"svg").append("g")
+            .attr("class", "yAxisLong")
+            .call(yAxisLong)
+            .attr("transform","translate("+(w+p)+", "+p+")")
+        
+        d3.select("."+field.split(" ").join("_")+"svg").append("g")
+            .attr("class", "xAxis")
+            .call(xAxis)
+            .attr("transform","translate("+0+", "+(h-p)+")")
+        
+        
+        svg.append("text").text(field).attr("x",p*2).attr("y",p*2).style("font-size","24px")
+        svg.append("text").text("year").attr("x",w/2).attr("y",h-4)
+        svg.append("text").text("number of papers").attr("x",10).attr("y",h/2-p).style("writing-mode","tb")
+        
+        
+        svg.selectAll("."+field)
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("width",bw)
+        .attr("height",function(d,i){
+            return yScale(d[field])
+        })
+        .attr("y",function(d,i){
+            return h-yScale(d[field])-p
+            
+        })
+        .attr("x",function(d,i){            
+            return xScale(d["year"])
+        })
+        
+        svg.selectAll(".label_"+field)
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function(d,i){
+            if(d[field]>0){
+            return d[field]
+                
+            }
+        })
+        .attr("y",function(d,i){
+            return h-yScale(d[field])-p-2
+        })
+        .attr("x",function(d,i){            
+            return xScale(d["year"])+bw/2
+        })
+        .attr("text-anchor","middle")
+        .style("font-size","12px")
+        
+    }
+    
+    function arrayRemove(arr, value) {
+       return arr.filter(function(ele){
+           return ele != value;
+       });
+
+    }
+    
+    function steamgraph(data){
+        var w = 1200
+        var h = 500
+        var p = 20
+        var bw = w/data.length-2
+        
+        d3.select("body").append("svg").attr("width", w).attr("height", h)
+    
+        var xScale = d3.scaleLinear().domain([1964,2018]).range([20,w])
+    
+        var yScale = d3.scaleLinear().domain([1,800]).range([h-p,20])
+    
+        var heightScale = d3.scaleLinear().domain([1,800]).range([20, h-p])
+    
+        var movies = arrayRemove(Object.keys(data[0]),"year")
+        
+        var colorScale = d3.scaleOrdinal().domain(movies).range(["#85b776","#dfe142",
+"#5f5848",
+"#8ee842",
+"#606f5a",
+"#6ce579",
+"#6b6b3d",
+"#5fbc34",
+"#d1d2b4",
+"#48a143",
+"#cee5ad",
+"#7d7321",
+"#ade687",
+"#4a784b",
+"#dedb7c",
+"#4b7838",
+"#a2b235",
+"#919d7c",
+"#5c7e23",
+"#aca65a"])
+    
+    
+        yAxis = d3.axisLeft().scale(yScale)
+            .tickSize(-1*w)
+    
+        d3.select("svg").append("g")
+            .attr("class", "yAxis")
+            .call(yAxis)
+            .attr("transform",`translate(${20}, 0)`)
+    
+        xAxis = d3.axisBottom().scale(xScale)
+            .tickSize(-500)   
+    
+        d3.select("svg").append("g")
+            .attr("class", "xAxis")
+            .call(xAxis)
+            .attr("transform","translate(0, "+(h-p)+")")
+    
+        d3.select("g.xAxis").selectAll("g.tick").selectAll("text")
+    
+        d3.select("g.xAxis").selectAll("g.tick").selectAll("line")
+    
+        var stackLayout = d3.stack()
+            .keys(movies)
+    
+     // var tool_tip = d3.tip()
+     //       .attr("class", "d3-tip")
+     //       .offset([-8, 0])
+     //       //.html(function(d) { return "Radius: " + d; });
+     //       var tipText =""
+     //   d3.select("svg").call(tool_tip);
+    
+        d3.select("svg").selectAll("g.bar")
+        .data(stackLayout(data)) // Pass the sorted data in
+        .enter()
+        .append("g")
+        .attr("class", "bar")
+        .each(function(d) {
+            
+            d3.select(this).selectAll("rect") 
+                .data(d)
+                .enter()
+                .append("rect")
+                .attr("width", bw)
+                .attr("height", p => heightScale(p[1]) - heightScale(p[0]))
+                .attr("x", function(p,i){return xScale(p.data.year)})
+                .attr("y", p => yScale(p[1]))
+                .style("fill", function(p,i){
+                    if(p[1]-p[0]>10){
+                        return colorScale(d.key)
+                    }else{
+                        return "#aaa"
+                    }
+                }) 
+                .attr("year", function(p,i){return p.data.year})
+                .attr("count", function(p,i){return p[1]-p[0]})
+            
+            
+                .on("mouseover",function(p,i){
+                    tipText=d3.select(this).attr("year")+' '+d3.select(this).attr("count")
+                })
+        })
+        .on("mouseover",function(d,i){
+           // console.log(d.key)
+            tipText+=" "+d.key
+            tool_tip.html(tipText)
+            tool_tip.show()
+        })
+        .on("mouseout",function(d,i){
+            tool_tip.hide()
+        })
+        
+    }
+
+</script>
+</body>
+</html>

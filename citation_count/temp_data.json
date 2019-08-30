@@ -1,0 +1,55 @@
+{
+"name" : "Homophily",
+"year":1990,
+  "children": [
+      { "name" : "1949",
+          "year":1999,
+          "children":[
+              {"year":1999,"name":"is used in conjunction with its opposite heterophily."},
+              {"year":1999,"name":"is largely the unintended by-product of social forces and cultural orientations in these communities."},
+              {"year":1999,"name":"varies greatly for different social attributes."},
+              {"year":1999,"name":"is used in conjunction with its opposite heterophily."},
+              {"year":1999,"name":"is the exception rather than the rule"},
+              {"year":1999,"name":"is a highly variable and modifiable characteristic which depends in great part on the structure of the community in which these statuses are found"},
+              {"year":1999,"name":"a matter of degree"}
+          ]
+      },
+      { "name" : "1954",
+          "children":[
+              {"name":"strongest in race and politics"},
+              {"name":"will see the development of a more comprehensive model ..."},
+              {"name":"... ..."},
+              {"name":"... ..."}
+          ]
+      },
+      { "name" : "1954 - today",
+          "children":[
+              {"year":1999,"name":"a pervasive social fact"},
+              {"year":1999,"name":"is self reinforcing"},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."},
+              {"name":"... ..."}
+          ]
+      }
+  ]
+}

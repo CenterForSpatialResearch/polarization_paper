@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>citation timeline</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script type="text/javascript" src="d3.v4.min.js"></script>
+<!--
+    <script type="text/javascript" src="d3-tip.js"></script>
+-->
+  
+    
+    <style>
+        @font-face {
+            font-family: "stan";
+                src: url(StanhopeRR-Medium.otf) format("opentype");
+        }
+        .d3-tip{
+            background-color:rgba(255,255,255,.6);
+            padding:10px;
+            font-family:helvetica;
+            font-size:10px;
+            
+        }
+        .yAxisLong{
+            stroke-dasharray: 1 3; 
+        }
+        body{
+            font-family:stan;
+            font-size:11px;
+        }
+        #title{
+            width:50%;
+            margin:0px;
+            padding:3px;
+            display:inline-block;
+            vertical-align:top;
+            min-width:100px;
+            font-size:48px;
+            letter-spacing:1px;
+        }
+        #info{
+            font-size:11px;
+            padding:3px;
+        }
+    </style>
+</head>
+<body>
+  
+   <div id="title">
+       Citation Timeline
+   </div>
+   <div id="info">
+       Papers from Web of Science that Cite Lazarsfeld and Merton
+   </div>
+    <div id="chart1">
+    </div>
+   
+   <div id="smallCharts"></div>
+
+
+
+<script>
+
+    var fields = ["computer science","sociology","behavioral science","social science and other topics","psychology","business economics","other fields"];
+    
+    var colors = {
+         "computer science":"#ec008c",
+        "sociology":"#00aeef",
+        "behavioral science":"#fff200",
+        "social science and other topics":"#3cb44b",
+        "psychology":"#f7941d",
+        "business economics":"#e6194B",
+        "other fields":"#a9a9a9"
+        
+    }
+    
+    
+    d3.csv("citation_count.csv",function(data){
+        var width = 700
+        var height = 400
+        var padding = 50
+        var svg = d3.select("#chart1").append("svg").attr("width",width+padding).attr("height",height+padding)
+        var x = d3.scaleLinear()
+                .domain([1960,2018])
+                .rangeRound([0, width])
+        
+        //x.domain(data.map(function(d) { return d.year; }))
+        
+        var y = d3.scaleLinear()
+            .range([height, 0]);
+        //y.domain([0, d3.max(data, function(d) { return d.total; })])
+        y.domain([0, 800])
+        
+        var z = d3.scaleOrdinal().range(["#f7941d","#ec008c","#fff200","#00aeef"])
+            .domain(fields)
+        var stack = d3.stack();
+    var tooltipText =""
+        
+        
+        svg.selectAll(".key")
+        .data(Object.keys(colors))
+        .enter()
+        .append("rect")
+        .attr("width",10)
+        .attr("height",10)
+        .attr("x",10)
+        .attr("y",function(d,i){
+            console.log(d)
+            return i*15+10
+        })
+        .attr("fill",function(d){
+            return colors[d]
+        })
+        svg.selectAll(".keytext")
+        .data(Object.keys(colors))
+        .enter()
+        .append("text")
+        .attr("x",25)
+        .attr("y",function(d,i){
+            console.log(d)
+            return i*15+18
+        })
+        .text(function(d){
+            return d
+        })
+    
+        
+      svg.selectAll(".serie")
+          //the keys for the stack are the columns minus the first column, which is removed
+          //using the "slice" method
+          .data(stack.keys(data.columns.slice(2))(data))
+          // each age series is given it's own g
+          .enter().append("g")
+            .attr("class", function(d){
+                return d.key.split(" ").join("_")
+            })
+        .attr("fill",function(d,i){
+            return colors[d.key]
+        })
+        .on("mouseover",function(d,i){
+            tooltipText = d.key
+        })
+          .selectAll("rect")
+          .data(function(d) { return d; })
+          .enter().append("rect")
+            
+            //.attr("stroke","#fff")
+            //.attr("stroke-width",1)
+            // why is .data needed here? why not just d? maybe because it was sliced off earlier?
+            .attr("x", function(d) { return x(d.data.year); })
+            // from the slice method, d is a pair of coordinates, the upper and lower bounds of the 
+            // area to be displayed. This sets the upper y value
+            .attr("y", function(d) { return y(d[1]); })
+            // this calculates the height down from the starting point
+            .attr("height", function(d) {return y(d[0]) - y(d[1]); })
+            // .bandwidth is a method that calculates, what the width of each band should be. there is 
+            // a default padding between the bars. 
+            .attr("width", 10)
+            .on("mouseover",function(d){
+                var count = d[1]-d[0]
+                tooltipText+=" "+count
+                tooltip.select("text").text(tooltipText)
+                tooltip.style("display", null);
+                
+            })
+            .style("cursor","pointer")
+            //.on("mouseout", function() {
+            //     //tooltip.style("display", "none"); 
+            // })
+                .on("mousemove", function(d) {
+                  var xPosition = d3.mouse(this)[0] - 5;
+                  var yPosition = d3.mouse(this)[1] - 5;
+                  tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
+                //  tooltip.select("text").text(d[1]-d[0]);
+                });
+            
+        var tooltip = svg.append("g")
+            .attr("class", "tooltip")
+            .style("display", "none");    
+            
+        tooltip.append("rect")
+            .attr("width", 100)
+            .attr("height", 20)
+            .attr("fill", "white")
+            .style("opacity", 0.5);
+
+          tooltip.append("text")
+            .attr("x", 30)
+            .attr("dy", "1.2em")
+            .style("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("font-weight", "bold");
+            
+        
+    })
+
+</script>
+</body>
+</html>
