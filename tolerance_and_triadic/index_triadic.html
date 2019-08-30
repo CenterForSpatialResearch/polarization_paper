@@ -9,14 +9,14 @@
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script src="../lib/d3.v5.min.js"></script>
     <script src="../lib/colors.js"></script>
-      <link rel="stylesheet" href="style.css">
+      <link rel="stylesheet" href="style_triadic.css">
 
 
 </head>
 <body>
    <div id="all">
-       <div id="title">Tolerances</div>
-       <div id ="info">Adjust the tolerance of the network, then add links to see how the network will grow.<br/>
+       <div id="title">Triadic</div>
+       <div id ="info">Add links to see the network grows by adding links at each step between nodes that have the most neighbors in common .<br/>
           </div>
        
       
@@ -26,19 +26,20 @@
              <strong> NOTE:</strong> in order to create triadic closures between nodes in the network, you must already have linked nodes to build upon.</div>-->
     
    <div class="slidecontainer">
-     <div class="sliderBox" id="t">
-        <span id="tolerance"><strong>Tolerance:</strong> Between 0% and 100% </span>
-        <br/>
-        <input type="range" min="1" max="100" value="10" class="slider" id="growthInput">
-        <span id="growthValue">value</span>
-      </div>  
+   
       
      <div class="sliderBox" id="l">
-          <strong>Total Number of Links:</strong> Between 0 and 1000 Links<br>
-        <input type="range" min="0" max="1000" value="0" class="slider sliderLinksAdded" id="linksAddedInput">
+          <strong>Total Number of Links:</strong> Between 100 and 1000 Links<br>
+        <input type="range" min="100" max="1000" value="100" class="slider sliderLinksAdded" id="linksAddedInput">
         <span id="linksAddedValue">value</span>
       </div>   
       
+      <div class="sliderBox" id="t">
+         <span id="tolerance"><strong>Tolerance:</strong> Between 0% and 100% </span>
+         <br/>
+         <input type="range" min="1" max="100" value="10" class="slider" id="growthInput">
+         <span id="growthValue">value</span>
+       </div>
    </div>
    
     <div id="chart1"></div>
@@ -49,7 +50,6 @@
     
 <script type="text/javascript"> 
 var triadicMode = false
-    
     
 d3.select("#triadic")
     .style("cursor","pointer")
@@ -79,11 +79,12 @@ var strength = -100
     
 var size = 50
 
-var thresholdStart =.1//var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
+var thresholdStart =Math.random()//.8//var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
+console.log(thresholdStart)
 var threshold =parseInt(document.getElementById("growthInput").value)/100;
     
 var groups = 2
-var friendsToMake = 0
+var friendsToMake = 1
     
 //var newFriendships =100
 
@@ -166,9 +167,9 @@ function ticked() {
 } 
 
 </script>
-<script src="inputControl.js"></script>
-<script src="add_triadic.js"></script>
-<script src="count.js"></script>
+<script src="inputControl_triadic.js"></script>
+<script src="add_triadic_triadic.js"></script>
+<script src="count_triadic.js"></script>
 <script src="timeline.js"></script>
 
 </body>

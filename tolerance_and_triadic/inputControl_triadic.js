@@ -1,4 +1,3 @@
-    var timelineRecorder = [{threshold:.1,links:0}]
 
 function updateSlider(sliderDiv,displayDiv, thresholdVariable){
     var sliderStart = document.getElementById(sliderDiv);
@@ -41,7 +40,7 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
       
       if(sliderDiv=="growthInput"){
           threshold = sliderValue/100
-          addTimelineMarker(links.length)          
+          //addTimelineMarker(links.length)          
           //timelineRecorder.push([threshold,links.length])
       }
       
@@ -63,12 +62,13 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
           if(sliderValue>links.length){
               //addLink(sliderValue-links.length)
            //    addTriadicLink(sliderValue-links.length)
-              if(triadicMode==true){
-                  addMostCommonLink(sliderValue-links.length)
-              }else{
-                    addLink(sliderValue-links.length)
-              }
-              drawTimeline(sliderValue,threshold)
+              addMostCommonLink(sliderValue-links.length)
+              //if(triadicMode==true){
+              //    addMostCommonLink(sliderValue-links.length)
+              //}else{
+              //      addLink(sliderValue-links.length)
+              //}
+          //    drawTimeline(sliderValue,threshold)
           }else{
               for(var i = 0; i<links.length-sliderValue;i++){
                   links.pop()
@@ -92,10 +92,10 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
           }
           
           restart()  
-          addTimelineMarker(links.length)
-          if(threshold != timelineRecorder[timelineRecorder.length-1].threshold || links.length!=timelineRecorder[timelineRecorder.length-1].links){
-              timelineRecorder.push({threshold:threshold,links:links.length})
-          }
+         // addTimelineMarker(links.length)
+          //if(threshold != timelineRecorder[timelineRecorder.length-1].threshold || links.length!=timelineRecorder[timelineRecorder.length-1].links){
+          //    timelineRecorder.push({threshold:threshold,links:links.length})
+          //}
           
       }
       
@@ -114,7 +114,7 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
 /*
 updateSlider("startingInput","startValue", thresholdStart)
 */
-updateSlider("growthInput","growthValue", threshold)
+//updateSlider("growthInput","growthValue", threshold)
 
 updateSlider("linksAddedInput","linksAddedValue", threshold)
 
@@ -165,6 +165,7 @@ function addLink(quantity){
 }
 
 function addMostCommonLink(quantity){
+    //console.log(quantity, "most common")
     var linksTracker = []
     var linksMade = 0
      while(linksMade<quantity){

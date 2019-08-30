@@ -43,6 +43,13 @@
     }
     #t{
         width:250px;
+        visibility:hidden;
+    }
+    #info{
+        padding:5px;
+    }
+    #linksAddedInput{
+        padding-left:50px;
     }
     .sliderBox{
         margin-right:10px;

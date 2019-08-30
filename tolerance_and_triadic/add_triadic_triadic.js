@@ -52,7 +52,7 @@ var node = g.append("g")
        
     
     function addMostCommonFriend(time,count){
-        
+        console.log("add common",count)
         //select random node as source
         //get all friends of friends
         //tally

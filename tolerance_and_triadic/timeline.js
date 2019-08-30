@@ -151,7 +151,7 @@ function drawMask(linkLength){
     .attr("transform","translate("+ml+","+(mt)+")")
     .attr("class","progressMask")
 }
-drawTimelineAxis()
-drawTimeline(100,threshold)
-
-addTimelineMarker(0)
+//drawTimelineAxis()
+//drawTimeline(100,threshold)
+//
+//addTimelineMarker(0)
