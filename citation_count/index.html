@@ -18,11 +18,10 @@
                 src: url(StanhopeRR-Medium.otf) format("opentype");
         }
         .d3-tip{
-            background-color:rgba(255,255,255,.6);
             padding:10px;
-            font-family:helvetica;
-            font-size:10px;
-            
+            font-size:11px;
+            color:rgba(0,0,0,1);;
+            background-color:rgba(255,255,255,.8);
         }
         .yAxisLong{
             stroke-dasharray: 1 3; 
@@ -44,6 +43,11 @@
         #info{
             font-size:11px;
             padding:3px;
+        }
+        #chart1{
+            position:absolute;
+            top:0px;
+            left:0px;
         }
     </style>
 </head>
@@ -80,7 +84,7 @@
     
     d3.csv("citation_count.csv",function(data){
         var width = 700
-        var height = 400
+        var height = 600
         var padding = 50
         var svg = d3.select("#chart1").append("svg").attr("width",width+padding).attr("height",height+padding)
         var x = d3.scaleLinear()
@@ -109,19 +113,19 @@
         .attr("x",10)
         .attr("y",function(d,i){
             console.log(d)
-            return i*15+10
+            return i*15+112
         })
         .attr("fill",function(d){
             return colors[d]
         })
+        
         svg.selectAll(".keytext")
         .data(Object.keys(colors))
         .enter()
         .append("text")
         .attr("x",25)
         .attr("y",function(d,i){
-            console.log(d)
-            return i*15+18
+            return i*15+120
         })
         .text(function(d){
             return d
@@ -144,56 +148,52 @@
             tooltipText = d.key
         })
           .selectAll("rect")
-          .data(function(d) { return d; })
+          .data(function(d,i) { 
+              return d; })
           .enter().append("rect")
-            
-            //.attr("stroke","#fff")
-            //.attr("stroke-width",1)
-            // why is .data needed here? why not just d? maybe because it was sliced off earlier?
             .attr("x", function(d) { return x(d.data.year); })
-            // from the slice method, d is a pair of coordinates, the upper and lower bounds of the 
-            // area to be displayed. This sets the upper y value
             .attr("y", function(d) { return y(d[1]); })
-            // this calculates the height down from the starting point
             .attr("height", function(d) {return y(d[0]) - y(d[1]); })
-            // .bandwidth is a method that calculates, what the width of each band should be. there is 
-            // a default padding between the bars. 
             .attr("width", 10)
+            .attr("opacity",.7)
             .on("mouseover",function(d){
+                d3.select(this).attr("opacity",1)
                 var count = d[1]-d[0]
-                tooltipText+=" "+count
-                tooltip.select("text").text(tooltipText)
-                tooltip.style("display", null);
-                
+                tooltip.text(count)          
             })
             .style("cursor","pointer")
-            //.on("mouseout", function() {
-            //     //tooltip.style("display", "none"); 
-            // })
+            .on("mouseout", function() {
+                d3.select(this).attr("opacity",.7)
+                
+                tooltip.text("")          
+             })
                 .on("mousemove", function(d) {
-                  var xPosition = d3.mouse(this)[0] - 5;
-                  var yPosition = d3.mouse(this)[1] - 5;
+                  var xPosition = d3.mouse(this)[0] +5;
+                  var yPosition = d3.mouse(this)[1] -40;
+                  tooltip.style("left",xPosition+"px")
+                  tooltip.style("top",yPosition+"px")
                   tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
                 //  tooltip.select("text").text(d[1]-d[0]);
                 });
             
-        var tooltip = svg.append("g")
-            .attr("class", "tooltip")
-            .style("display", "none");    
+        var tooltip = d3.select("#chart1").append("div").attr("id","tooltip")
+                .style("position","absolute")
+                .attr("class","d3-tip")
+                .style("width",15)
+                .style("height",15)
+            .html("")
+            .style("text-align","middle")
             
-        tooltip.append("rect")
-            .attr("width", 100)
-            .attr("height", 20)
-            .attr("fill", "white")
-            .style("opacity", 0.5);
-
-          tooltip.append("text")
-            .attr("x", 30)
-            .attr("dy", "1.2em")
-            .style("text-anchor", "middle")
-            .attr("font-size", "12px")
-            .attr("font-weight", "bold");
-            
+            console.log(x.domain())
+                
+  var xAxis = d3.axisBottom(x)
+                .ticks(5)
+                .tickFormat(d3.format("d"))
+svg.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(10," + height + ")")
+      .call(xAxis)  
+                
         
     })
 
