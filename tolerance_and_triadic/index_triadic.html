@@ -17,10 +17,14 @@
    <div id="all">
        <div id="title">Triadic Closure</div>
        <div id ="info">
-           This network has 100 links added at a random tolerance of <span id="randomTolerance"></span>.<br>
-           Grow the network with triadic closure by adding links at each step between nodes that have the most neighbors in common.<br/>
            
-           
+           This network has 100 links added at the tolerance of
+           <div class="t_button" id="t_1">10% </div>
+           <div class="t_button" id="t_3">33% </div>
+           <div class="t_button" id="t_6">67% </div>
+           <div class="t_button" id="t_9">90% </div>
+           <br/>
+            Grow the network with triadic closure by adding links at each step between nodes that have the most neighbors in common.
           </div>
        
     
@@ -50,8 +54,8 @@
     <div id="hideTolerance"></div>
     
 <script type="text/javascript"> 
+  d3.select("#t_1").style("text-decoration","underline").style("color","#ec008c")  
 var triadicMode = false
-    
 d3.select("#triadic")
     .style("cursor","pointer")
     .on("click",function(){ 
@@ -80,7 +84,7 @@ var strength = -100
     
 var size = 50
 
-var thresholdStart =Math.random()//.8//var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
+var thresholdStart =.1//Math.random()//.8//var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
 d3.select("#randomTolerance").html(thresholdStart.toFixed(2))
 
 var threshold =parseInt(document.getElementById("growthInput").value)/100;
@@ -97,6 +101,34 @@ var links = []
 
 
 makeNetworkData(thresholdStart)
+
+function adjustStartThreshold(buttonName,threshold){
+    d3.select(buttonName)
+    .style("cursor","pointer")
+    .on("mouseover",function(){
+        d3.select(this).style('background-color',"yellow")
+    })
+    .on("mouseout",function(){
+        d3.select(this).style('background-color',"#fff")
+    })
+    .on('click',function(){
+        d3.selectAll(".t_button").style('text-decoration',"none").style("color","black")
+        d3.select(this).style("text-decoration","underline").style("color","#ec008c")
+        thresholdStart = threshold
+        console.log(thresholdStart)
+        makeNetworkData(thresholdStart)
+        restart();
+          var linksAddedValue = document.getElementById("linksAddedInput")
+          linksAddedValue.value = 100        
+        d3.select("#linksAddedValue").html(100)
+    })
+}
+adjustStartThreshold("#t_1",.1)
+adjustStartThreshold("#t_3",1/3)
+adjustStartThreshold("#t_6",2/3)
+adjustStartThreshold("#t_9",.9)
+
+
  
 d3.select("#setup").html("SETUP<br>size: "+size+"<br>friends each: "+friendsToMake+"<br>"+"start tolerance: "+thresholdStart
     +"<br>tolerance: "+threshold)

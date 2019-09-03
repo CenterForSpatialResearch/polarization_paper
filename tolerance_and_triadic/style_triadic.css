@@ -51,6 +51,12 @@
     #linksAddedInput{
         padding-left:50px;
     }
+    .t_button{
+        display: inline-block;
+        border-right: 1px solid black;
+        font-size:11px;
+        padding:5px;
+    } 
     .sliderBox{
         margin-right:10px;
         display:inline-block;

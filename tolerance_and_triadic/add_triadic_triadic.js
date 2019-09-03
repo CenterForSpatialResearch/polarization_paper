@@ -108,8 +108,6 @@ var node = g.append("g")
            // console.log(randomSource)
            // console.log(mostInCommonNode)
             relationshipTable(links,count)
-            d3.select(".tolerance").text("Triadic")
-            document.title = thresholdStart+"triadic"+"_friends_"+count
             
            // if(count==1){
            //     downloadSVG()
@@ -144,8 +142,6 @@ var node = g.append("g")
         //    .force("link", d3.forceLink(links).distance(distance))
         //
         //
-            
-            console.log(threshold)
             
             d3.select("#friendCount").html("new friends: "+ count)
             document.title = thresholdStart+"th_"+threshold+"_friends_"+count
