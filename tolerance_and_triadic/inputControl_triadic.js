@@ -70,15 +70,16 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
               //}
           //    drawTimeline(sliderValue,threshold)
           }else{
+            calculateCrossColor(links)
               for(var i = 0; i<links.length-sliderValue;i++){
                   links.pop()
-                  //strength +=.2
+            
                   
+                  //strength +=.2
                 simulation.force("charge", d3.forceManyBody().strength(strength))
                 .force("link", d3.forceLink(links).distance(distance))
                   
               }
-              
               d3.selectAll(".timelineRect")
               .each(function(d,i){
                   if(i>links.length){
@@ -90,7 +91,6 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
                    d3.select(".timeline_"+(1000-t)).remove()
                }
           }
-          
           restart()  
          // addTimelineMarker(links.length)
           //if(threshold != timelineRecorder[timelineRecorder.length-1].threshold || links.length!=timelineRecorder[timelineRecorder.length-1].links){
