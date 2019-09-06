@@ -72,7 +72,7 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
           }else{
               for(var i = 0; i<links.length-sliderValue;i++){
                   links.pop()
-                  strength +=.2
+                  //strength +=.2
                   
                 simulation.force("charge", d3.forceManyBody().strength(strength))
                 .force("link", d3.forceLink(links).distance(distance))
@@ -158,17 +158,22 @@ function addLink(quantity){
         }
         updateLinks()
     }
-    for(var i =0; i<quantity; i++){
-        strength -=.2
-        
-    }
+   // for(var i =0; i<quantity; i++){
+   //     strength -=.2
+   //     
+   // }
 }
 
+
+var lastKnownnOfNCountArray = []
 function addMostCommonLink(quantity){
+    calculateCrossColor(links)
+    
     //console.log(quantity, "most common")
     var linksTracker = []
     var linksMade = 0
-     while(linksMade<quantity){
+    var nOfNCountArray = []
+     while(linksMade<quantity || nOfNCountArray.length==0){
          //get random node
         var randomSource = nodes[Math.round(Math.random()*(nodes.length-1))]
          
@@ -196,12 +201,18 @@ function addMostCommonLink(quantity){
                  }
              }
          }
-         var nOfNCountArray = Object.keys(nOfNCount).map(function(key) {
+         nOfNCountArray = Object.keys(nOfNCount).map(function(key) {
            return [key, nOfNCount[key]];
          });
          nOfNCountArray.sort(function(first, second) {
            return second[1] - first[1];
          });
+        // console.log(nOfNCountArray)
+         if(nOfNCountArray.length>0){
+             lastKnownnOfNCountArray = nOfNCountArray
+         }else{
+             nOfNCountArray = lastKnownnOfNCountArray
+         }
         var mostInCommonId = nOfNCountArray[0][0]
         var mostInCommonNode = getNodeById(mostInCommonId)
         
@@ -217,7 +228,7 @@ function addMostCommonLink(quantity){
              linksTracker.push(currentLinkIds)
              linksMade+=1
             updateLinks()
-        strength -=.2
+   //     strength -=.2
              
             simulation.force("charge", d3.forceManyBody().strength(strength))
             .force("link", d3.forceLink(links).distance(distance))
@@ -289,4 +300,5 @@ function addTriadicLink(quantity){
             console.log("repeat")
         }            
     }
+    
 }

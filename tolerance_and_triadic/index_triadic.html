@@ -32,7 +32,7 @@
    
       
      <div class="sliderBox" id="l">
-          <strong>Total Number of Links:</strong> Between 100 and 1000 Links<br>
+          <strong>Total Number of Links:</strong> Between 100 and 700 Links<br>
         <input type="range" min="100" max="1000" value="100" class="slider sliderLinksAdded" id="linksAddedInput">
         <span id="linksAddedValue">value</span>
       </div>   
@@ -50,7 +50,7 @@
     <div id="chart1"></div>
     
     </div>
-    
+    <div id="linkCount">aaaaa</div>
     <div id="hideTolerance"></div>
     
 <script type="text/javascript"> 
@@ -69,9 +69,7 @@ d3.select("#triadic")
             d3.select("#hideTolerance").style("visibility","visible")
         }
     })
-    
-var downloadInterval = 500
-    
+        
 var svg = d3.select("#chart1").append("svg")
    // .attr("width",window.innerWidth)
     .attr("width",800)
@@ -80,9 +78,9 @@ var width = +svg.attr("width")
 var height = +svg.attr("height")
 
 var distance = 50
-var strength = -100
+var strength = -80
     
-var size = 50
+var size = 100
 
 var thresholdStart =.1//Math.random()//.8//var thresholdStart = parseInt(document.getElementById("startingInput").value)/100;
 d3.select("#randomTolerance").html(thresholdStart.toFixed(2))
@@ -115,7 +113,6 @@ function adjustStartThreshold(buttonName,threshold){
         d3.selectAll(".t_button").style('text-decoration',"none").style("color","black")
         d3.select(this).style("text-decoration","underline").style("color","#ec008c")
         thresholdStart = threshold
-        console.log(thresholdStart)
         makeNetworkData(thresholdStart)
         restart();
           var linksAddedValue = document.getElementById("linksAddedInput")
@@ -123,6 +120,29 @@ function adjustStartThreshold(buttonName,threshold){
         d3.select("#linksAddedValue").html(100)
     })
 }
+function calculateCrossColor(links){
+    var ho = 0
+    var he = 0
+    for(var i in links){
+        var g1 = links[i].source.group
+        var g2 = links[i].target.group
+        if(g1==g2){
+            ho = ho+1
+        }else{
+            he = he+1
+        }
+    }
+    var total = he+ho
+    var hePercent = Math.round(he/total*100)
+    var hoPercent = Math.round(ho/total*100)
+    
+    d3.select("#linkCount")
+        .html("Homophilous Links: "+hoPercent+"%"
+        +"<br>"
+        +"Heterophilous Links: "+hePercent+"%"
+        )
+}
+
 adjustStartThreshold("#t_1",.1)
 adjustStartThreshold("#t_3",1/3)
 adjustStartThreshold("#t_6",2/3)
@@ -187,6 +207,8 @@ function makeNetworkData(threshold){
             homophily+=1
         }
     }
+    calculateCrossColor(links)
+    
 }
 
 function ticked() {
@@ -199,6 +221,8 @@ function ticked() {
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
 } 
+console.log(links)
+
 
 </script>
 <script src="inputControl_triadic.js"></script>

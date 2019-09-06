@@ -51,6 +51,10 @@
     #linksAddedInput{
         padding-left:50px;
     }
+    #linkCount{
+        font-size:14px;
+        padding:10px;
+    }
     .t_button{
         display: inline-block;
         border-right: 1px solid black;
