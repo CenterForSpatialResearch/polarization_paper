@@ -19,26 +19,22 @@ body{
 .before{
     position:absolute;
     text-align:right;
-    right:55%;
+    right:2000px;
     height:20px;
-    width:10000px;
+    width:2000px;
 }
-.center{
-    margin-left:45%;  
-    color:blue;
-    height:20px;
-}
+
 .after{
     position:absolute;
-    left:45%;
+    left:2000px;
     height:20px;
-    width:10000px;
+    width:2000px;
 }
 #chart1{
     position:absolute;
     float:top;
-    width:95%;
-    overflow:hidden;
+    width:4000px;
+    overflow:auto;
     margin-top:20px;
     z-index:-1;
 }

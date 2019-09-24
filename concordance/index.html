@@ -9,10 +9,6 @@
     <script type="text/javascript" src="../lib/d3.v5.min.js"></script>
     <script type="text/javascript" src="../lib/d3-tip.js"></script>
     <script type="text/javascript" src="../lib/jquery.js"></script>
-    <script type="text/javascript" src="../lib/colors.js"></script>
-<!--
-    <script type="text/javascript" src="downloadSVG.js"></script>
--->
   <link rel="stylesheet" type="text/css" href="concordance.css">
   
     
@@ -61,6 +57,7 @@
     
     document.title = field.split("_").join(" ")+" "+keyWord
     
+    
     var promises = []
     for(var f in fields){
         promises.push(d3.csv("data/citations by field - "+fields[f]+".csv"))
@@ -70,6 +67,8 @@
     //Promise.all([d3.csv("data/citations by field - "+field+".csv")])
     Promise.all(promises)
     .then(function(data){
+        console.log(data)
+      
         
         var chartData = data[data.length-1]
        // drawBarChart(field, chartData)
@@ -82,10 +81,26 @@
         d3.select(".computer_science").style("color",buttonHighlightColor)//.style("border","1px solid "+buttonHighlightColor)
         resize()
         //drawSvgText(formatted)
-           getCurrentYear()
+        getCurrentYear()        
+        
+//        document.addEventListener("wheel", function (e) {
+//            console.log(e.pageX)
+//           d3.selectAll(".year").style("margin-left",e.pageX+"px")//(4000-window.innerWidth)/2+currentXScroll+"px")
+//           // console.log(newXOffset)
+//        }, true);
+        
+        
        $(window).scroll(function(){
-           getCurrentYear()
+           var currentXScroll = window.pageXOffset
+           console.log(document.documentElement.scrollLeft)
+           //console.log(currentXScroll)
+           d3.selectAll(".year").style("margin-left",currentXScroll+"px")//(4000-window.innerWidth)/2+currentXScroll+"px")
+           
+           getCurrentYear()           
        })//.addEventListener("scroll", getCurrentYear);
+       var divWidth = parseInt(d3.select("#chart1").style('width').replace("px",""))
+       var windowWidth = window.innerWidth
+       window.scrollTo((divWidth-windowWidth)/2,0)
     })
     
     function offset(el) {
@@ -244,7 +259,6 @@ function drawSvgText(data){
 function getCurrentYear(){
     var startOffset = offset(document.querySelector("#chart1")).top
     var windowOffset = $(window).scrollTop()+startOffset
-    
     var yearOffsets = []
     for(var year = 1950; year<2020; year++){
         if(d3.select("#yearDivider_"+year).size()>0){
@@ -323,9 +337,7 @@ function drawText(data,splitBy,field){
             
             if(absList.length>1 && absList[0].length<lengthLimit && absList[1].length<lengthLimit){
                 topMarginIndex+=1
-                if((absList[0]+absList[1]).length<70){
-                    console.log(absList)
-                }
+ 
                 
                 if(i<=maxAtLine){
                     topMargin += fontSizeScaleTop(Math.abs(i-maxAtLine))
@@ -344,6 +356,7 @@ function drawText(data,splitBy,field){
                         .style("height","0px")
                         .style("padding-bottom","-30px")
                         .style("text-align","left")
+                        .style("margin-left",(4000-window.innerWidth)/2+"px")
                         .attr("class","year year_"+data[i][1].year)
                     }
                 }else if(i==0){
@@ -355,6 +368,7 @@ function drawText(data,splitBy,field){
                         .style("height","0px")
                         .style("padding","10px")
                         .style("padding-bottom","-30px")
+                        .style("margin-left",(4000-window.innerWidth)/2+"px")
                         .style("text-align","left")
                         .attr("class","year year_"+data[i][1].year)
                 }
