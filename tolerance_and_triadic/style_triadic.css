@@ -61,6 +61,10 @@
         font-size:11px;
         padding:5px;
     } 
+    .reset_button{
+        display: inline-block;
+        text-decoration:underline;
+    }
     .sliderBox{
         margin-right:10px;
         display:inline-block;

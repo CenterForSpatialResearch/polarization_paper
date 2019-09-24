@@ -33,11 +33,11 @@
         #title{
             width:50%;
             margin-left:80px;
-            padding:3px;
+            padding:10px;
             display:inline-block;
             vertical-align:top;
             min-width:100px;
-            font-size:48px;
+            font-size:24px;
             letter-spacing:1px;
         }
         #info{
@@ -56,10 +56,9 @@
 <body>
   
    <div id="title">
-       Citation Timeline
+      Business Economics
    </div>
    <div id="info">
-       Papers from Web of Science that Cite Lazarsfeld and Merton
    </div>
     <div id="chart1">
     </div>
@@ -84,9 +83,9 @@
     }
     
     
-    d3.csv("citation_count.csv",function(data){
+    d3.csv("businessEconomics.csv",function(data){
         var width = 700
-        var height = 500
+        var height = 100
         var padding = 100
         var svg = d3.select("#chart1").append("svg").attr("width",width+padding).attr("height",height+padding)
         var x = d3.scaleLinear()
@@ -98,7 +97,7 @@
         var y = d3.scaleLinear()
             .range([height, 0]);
         //y.domain([0, d3.max(data, function(d) { return d.total; })])
-        y.domain([0, 750])
+        y.domain([0, 150])
         
         var z = d3.scaleOrdinal().range(["#f7941d","#ec008c","#fff200","#00aeef"])
             .domain(fields)
@@ -106,32 +105,32 @@
     var tooltipText =""
         
         
-        svg.selectAll(".key")
-        .data(Object.keys(colors))
-        .enter()
-        .append("rect")
-        .attr("width",10)
-        .attr("height",10)
-        .attr("x",110)
-        .attr("y",function(d,i){
-            console.log(d)
-            return i*15+112
-        })
-        .attr("fill",function(d){
-            return colors[d]
-        })
-        
-        svg.selectAll(".keytext")
-        .data(Object.keys(colors))
-        .enter()
-        .append("text")
-        .attr("x",125)
-        .attr("y",function(d,i){
-            return i*15+120
-        })
-        .text(function(d){
-            return d
-        })
+      //  svg.selectAll(".key")
+      //  .data(Object.keys(colors))
+      //  .enter()
+      //  .append("rect")
+      //  .attr("width",10)
+      //  .attr("height",10)
+      //  .attr("x",110)
+      //  .attr("y",function(d,i){
+      //      console.log(d)
+      //      return i*15+112
+      //  })
+      //  .attr("fill",function(d){
+      //      return colors[d]
+      //  })
+      //  
+      //  svg.selectAll(".keytext")
+      //  .data(Object.keys(colors))
+      //  .enter()
+      //  .append("text")
+      //  .attr("x",125)
+      //  .attr("y",function(d,i){
+      //      return i*15+120
+      //  })
+      //  .text(function(d){
+      //      return d
+      //  })
     
         
       svg.selectAll(".serie")
@@ -144,6 +143,7 @@
                 return d.key.split(" ").join("_")
             })
         .attr("fill",function(d,i){
+            return "black"
             return colors[d.key]
         })
         .on("mouseover",function(d,i){
@@ -199,7 +199,7 @@
           .call(xAxis)  
          
         var yAxis = d3.axisLeft(y)
-                    .ticks(8)
+                    .ticks(5)
                     .tickFormat(d3.format("d"))
                 
         svg.append("g")

@@ -322,6 +322,9 @@ function drawText(data,splitBy,field){
             
             if(absList.length>1 && absList[0].length<lengthLimit && absList[1].length<lengthLimit){
                 topMarginIndex+=1
+                if((absList[0]+absList[1]).length<70){
+                    console.log(absList)
+                }
                 
                 if(i<=maxAtLine){
                     topMargin += fontSizeScaleTop(Math.abs(i-maxAtLine))
@@ -390,7 +393,8 @@ function drawText(data,splitBy,field){
                     d3.selectAll(".row").style("color","black")
                 })
                 .on("click",function(){
-                    var text = d3.select(this).attr("title")+" "+d3.select(this).attr("author")+" "+d3.select(this).attr("year")
+                    console.log(d3.select(this).text())
+                    var text = d3.select(this).text()//+" "+d3.select(this).attr("title")+" "+d3.select(this).attr("author")+" "+d3.select(this).attr("year")
                     var toCopy = d3.select("#myInput").attr("value",text)
                     document.getElementById("myInput").select(); 
                     document.execCommand("copy");
