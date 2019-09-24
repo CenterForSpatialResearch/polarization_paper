@@ -18,9 +18,7 @@ var node = g.append("g")
     restart();
         
     window.addEventListener("resize", function(){
-        console.log("resize")
         var newWidth = window.innerWidth
-        console.log(newWidth)
         strength = strengthScale(newWidth)
         restart()
     });
