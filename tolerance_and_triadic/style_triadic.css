@@ -37,7 +37,7 @@
     }
     #chart1{
         position:absolute;
-        top:0px;
+        top:100px;
         left:0px;
         z-index:-999;
     }
