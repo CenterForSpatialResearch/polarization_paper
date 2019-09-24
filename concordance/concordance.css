@@ -19,18 +19,18 @@ body{
 .before{
     position:absolute;
     text-align:right;
-    right:50%;
+    right:55%;
     height:20px;
     width:10000px;
 }
 .center{
-    margin-left:50%;  
+    margin-left:45%;  
     color:blue;
     height:20px;
 }
 .after{
     position:absolute;
-    left:50%;
+    left:45%;
     height:20px;
     width:10000px;
 }
