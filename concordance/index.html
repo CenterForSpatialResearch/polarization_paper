@@ -66,9 +66,7 @@
     
     //Promise.all([d3.csv("data/citations by field - "+field+".csv")])
     Promise.all(promises)
-    .then(function(data){
-        console.log(data)
-      
+    .then(function(data){      
         
         var chartData = data[data.length-1]
        // drawBarChart(field, chartData)
@@ -92,7 +90,7 @@
         
        $(window).scroll(function(){
            var currentXScroll = window.pageXOffset
-           console.log(document.documentElement.scrollLeft)
+           //console.log(document.documentElement.scrollLeft)
            //console.log(currentXScroll)
            d3.selectAll(".year").style("margin-left",currentXScroll+"px")//(4000-window.innerWidth)/2+currentXScroll+"px")
            
@@ -349,7 +347,7 @@ function drawText(data,splitBy,field){
                     if(data[i][1].year!=data[i-1][1].year){
                         d3.select("#chart1").append("div").attr("id","yearDivider_"+data[i][1].year).html(data[i][1].year)
                      //   .style("border-top","1px dotted "+barHighlightColor)
-                        .style("color","rgba(236, 0, 140,.2)")
+                        .style("color","rgba(236, 0, 140,0)")
                         .style("font-size","48px")
                         .style("width","100%")
                         .style("padding","10px")
@@ -362,7 +360,7 @@ function drawText(data,splitBy,field){
                 }else if(i==0){
                         d3.select("#chart1").append("div").attr("id","yearDivider_"+data[i][1].year).html(data[0][1].year)
                         //.style("border-top","1px dotted "+barHighlightColor)
-                        .style("color","rgba(	236, 0, 140,.2)")
+                        .style("color","rgba(	236, 0, 140,0)")
                         .style("font-size","48px")
                         .style("width","100%")
                         .style("height","0px")
