@@ -58,7 +58,6 @@
     .t_button{
         display: inline-block;
         border-right: 1px solid black;
-        font-size:11px;
         padding:5px;
     } 
     .reset_button{
@@ -107,6 +106,7 @@
       height: 20px; /* Slider handle height */
       cursor: pointer; /* Cursor on hover */
       background: url('slider_m.png');
+      border:none;
     }
 
     .slider::-moz-range-thumb {
