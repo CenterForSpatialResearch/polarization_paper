@@ -3,7 +3,7 @@
 <head>
      <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="shortcut icon" href="http://c4sr.columbia.edu/sites/default/files/favicon_0.ico" type="image/vnd.microsoft.icon">
     <title>concordances</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script type="text/javascript" src="../lib/d3.v5.min.js"></script>
@@ -23,7 +23,7 @@
 </head>
 <body>
  <div id="control">
-     <div id="title">Concordences</div>
+     <div id="title">Concordances</div>
        <div id="fields" class="select"></div>
              <div id="countText"></div> 
                     
@@ -304,6 +304,7 @@ function orderByMaxAtLine(list){
 }
 
 function drawText(data,splitBy,field){
+   d3.select("#tooltip").style("visibility","hidden")
     
     d3.selectAll(".row").remove()
     d3.selectAll(".year").remove()
@@ -375,6 +376,7 @@ function drawText(data,splitBy,field){
 					d3.select("#tooltip")
 						.style("left", xPosition + "px")
 						.style("top", yPosition + "px")		
+                    
 						//.select("#value")
                     
                      d3.select("#tooltip")
