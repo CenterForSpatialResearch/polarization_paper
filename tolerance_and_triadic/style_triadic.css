@@ -97,7 +97,7 @@
       transition: opacity .2s;
     }
     .sliderLinksAdded{
-        width: 500px; /* Full-width */
+        width: 50%; /* Full-width */
         height: 20px; /* Specified height */
     }
     .slider::-webkit-slider-thumb {

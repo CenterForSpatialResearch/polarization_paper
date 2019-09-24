@@ -52,7 +52,7 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
               d3.selectAll(".timelineRect").remove()
           }
           
-    var linksAddedScale = d3.scaleLinear().domain([0,1000]).range([0,timelineUtil.w])    
+   // var linksAddedScale = d3.scaleLinear().domain([0,1000]).range([0,timelineUtil.w])    
           
      //   d3.select(".progressMask")
      //   .transition()
@@ -75,7 +75,6 @@ function updateSlider(sliderDiv,displayDiv, thresholdVariable){
                   links.pop()
             
                   
-                  //strength +=.2
                 simulation.force("charge", d3.forceManyBody().strength(strength))
                 .force("link", d3.forceLink(links).distance(distance))
                   
@@ -279,7 +278,7 @@ function addTriadicLink(quantity){
                                   return a.tempIndex-b.tempIndex
                               })
                               
-                            console.log(nodes)
+                           // console.log(nodes)
                               
                         }
                     }
@@ -290,15 +289,15 @@ function addTriadicLink(quantity){
             
         
         if(linksTracker.indexOf(currentLinkIds)==-1){
-                console.log("ok")
+               // console.log("ok")
                 links.push({source: randomSource, target: mostInCommonNode})
                 linksMade+=1
                 restart()
                 updateLinks()
                 linksTracker.push(currentLinkIds)
-        }else{
-            console.log("repeat")
-        }            
+        }
+
+                  
     }
     
 }
