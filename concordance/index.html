@@ -67,7 +67,7 @@
     //Promise.all([d3.csv("data/citations by field - "+field+".csv")])
     Promise.all(promises)
     .then(function(data){      
-        
+        console.log(data)
         var chartData = data[data.length-1]
        // drawBarChart(field, chartData)
         
@@ -99,6 +99,13 @@
        var divWidth = parseInt(d3.select("#chart1").style('width').replace("px",""))
        var windowWidth = window.innerWidth
        window.scrollTo((divWidth-windowWidth)/2,0)
+       
+       
+       window.addEventListener("resize", function(){
+           var newWidth = window.innerWidth
+           window.scrollTo((divWidth-newWidth)/2,0)
+           
+       });
     })
     
     function offset(el) {
