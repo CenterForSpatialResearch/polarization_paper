@@ -59,7 +59,6 @@
             padding:5px;
         }
         #linksAddedInput{
-            padding-left:50px;
         }
         #linkCount{
             font-size:14px;
@@ -118,13 +117,18 @@
           background: url('slider_m.png');
           border:none;
         }
-
+     
         .slider::-moz-range-thumb {
           width: 40px; /* Set a specific slider handle width */
-          height: 10px; /* Slider handle height */
+          height: 20px; /* Slider handle height */
           cursor: pointer; /* Cursor on hover */
           background: url('slider_m.png');
+          border:none;
         }
+        input[type="range" i]{
+            color: red;
+        }
+        
         #growthValue{
             color:#ec008c;
             font-size:25px;
